@@ -2,11 +2,17 @@ package main
 
 import (
 	"fmt"
+	"groupie-tracker/controllers"
 	"groupie-tracker/db"
+	"net/http"
 )
 
 func main() {
 	db := initWithAPIdata()
+
+	http.HandleFunc("/", controllers.MainPage)
+
+	http.ListenAndServe(":8080", nil)
 
 	fmt.Println(db.Dates[:10])
 }
