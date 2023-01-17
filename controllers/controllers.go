@@ -28,7 +28,7 @@ func MainPage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	md := MainData{
-		Cards: make([]Card, 0),
+		Cards: []Card{},
 	}
 
 	for _, artist := range db.DB.Artists {
@@ -41,8 +41,6 @@ func MainPage(w http.ResponseWriter, r *http.Request) {
 
 		md.Cards = append(md.Cards, card)
 	}
-
-	fmt.Println(md.Cards[0].Image)
 
 	err = t.Execute(w, md)
 
