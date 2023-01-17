@@ -5,16 +5,40 @@
     <meta charset="utf-8" />
     <title>ascii-art-web</title>
     <link id="fav" rel="shortcut icon" type="image/x-icon" href="src/assets/favicon.ico" />
-    <link rel="stylesheet" href="src/css/normalize.css">
-    <link rel="stylesheet" href="src/css/style.css">
+    <link rel="stylesheet" href="../css/normalize.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-    <text>hello world</text>
-    <ul>
-        {{ range  .Bands }}
-        <li>{{.}}}}</li>
-        {{end}}
-    </ul>
+    <div class="header">
+
+    </div>
+    <div class="main-container">
+        <div class="card">
+            <div class="card__header">Group name</div>
+            <div class="card__main">
+                <div class="main__picture"></div>
+                <div class="group">
+                    <div class="group__text">Group member</div>
+                    <div class="group__text">Group member</div>
+                    <div class="group__text">Group member</div>
+                    <div class="group__text">Group member</div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card__header">Group name</div>
+            <div class="card__main">
+                <div class="main__picture"></div>
+                <div class="group">
+                    <div class="group__text">Creation date: 12/12/12</div>
+                    <div class="group__text">Group member</div>
+                    <div class="group__text">Group member</div>
+                    <div class="group__text">Group member</div>
+                    <div class="group__text">Group member</div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
