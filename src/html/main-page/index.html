@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>ascii-art-web</title>
+    <link id="fav" rel="shortcut icon" type="image/x-icon" href="src/assets/favicon.ico" />
+    <link rel="stylesheet" href="src/css/normalize.css">
+    <link rel="stylesheet" href="src/css/style.css">
+</head>
+<body>
+    <div class="header">
+    
+    </div>
+    <div class="main-container">
+        {{ range .Cards }}
+        {{ template "card" . }}
+        {{ end }}
+    </div>
+</body>
+
+</html>

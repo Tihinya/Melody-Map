@@ -55,7 +55,7 @@ type IndexRelations struct {
 	Index Relations `json:"index"`
 }
 
-type DB struct {
+type database struct {
 	Dates     Dates
 	Locations Locations
 	Relations Relations
@@ -66,9 +66,7 @@ type apiData interface {
 	*IndexDates | *IndexLocations | *IndexRelations | *Artists
 }
 
-// type IDB interface {
-// 	*Dates | *Locations | *Relations | *Artists
-// }
+var DB database
 
 func GetData[T apiData](url string, schema T) {
 	r, err := http.Get(url)
@@ -93,7 +91,7 @@ func GetData[T apiData](url string, schema T) {
 }
 
 // TODO takes a custom filter
-func (db *DB) GetArtists() Artists {
+func (db *database) GetArtists() Artists {
 	if db.Artists != nil {
 		return db.Artists
 	}
@@ -101,21 +99,21 @@ func (db *DB) GetArtists() Artists {
 	return nil
 }
 
-func (db *DB) GetLocations() Locations {
+func (db *database) GetLocations() Locations {
 	if db.Locations != nil {
 		return db.Locations
 	}
 
 	return nil
 }
-func (db *DB) GetRelations() Relations {
+func (db *database) GetRelations() Relations {
 	if db.Relations != nil {
 		return db.Relations
 	}
 
 	return nil
 }
-func (db *DB) GetDates() Dates {
+func (db *database) GetDates() Dates {
 	if db.Dates != nil {
 		return db.Dates
 	}
@@ -123,15 +121,32 @@ func (db *DB) GetDates() Dates {
 	return nil
 }
 
-func (db *DB) GetAllRecords() {}
+func (db *database) GetAllRecords() {}
 
-func (db *DB) GetArtistById() {}
+func (db *database) GetArtistById() {}
 
-// return every match on key
-// func (db *DB) Search(v string) []string {
-// 	var result []string
+// initializes db with API data
+func initWithAPIdata() *database {
+	var dates IndexDates
+	var locations IndexLocations
+	var relations IndexRelations
+	var artists Artists
 
-// 	for {
-// 		// exit case on mathc
-// 	}
-// }
+	GetData("https://groupietrackers.herokuapp.com/api/artists", &artists)
+	GetData("https://groupietrackers.herokuapp.com/api/dates", &dates)
+	GetData("https://groupietrackers.herokuapp.com/api/locations", &locations)
+	GetData("https://groupietrackers.herokuapp.com/api/relation", &relations)
+
+	result := database{
+		Dates:     dates.Index,
+		Locations: locations.Index,
+		Relations: relations.Index,
+		Artists:   artists,
+	}
+
+	return &result
+}
+
+func init() {
+	DB = *initWithAPIdata()
+}
