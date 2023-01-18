@@ -31,7 +31,7 @@ func MainPage(w http.ResponseWriter, r *http.Request) {
 		Cards: []Card{},
 	}
 
-	for _, artist := range db.DB.Artists {
+	for _, artist := range db.DB.GetArtists() {
 		card := Card{
 			Image:        artist.Image,
 			GroupName:    artist.Name,
