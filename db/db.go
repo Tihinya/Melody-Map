@@ -2,7 +2,7 @@ package db
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 )
@@ -66,7 +66,7 @@ type apiData interface {
 	*IndexDates | *IndexLocations | *IndexRelations | *Artists
 }
 
-var DB database
+var DB *database
 
 func GetData[T apiData](url string, schema T) {
 	r, err := http.Get(url)
@@ -77,7 +77,7 @@ func GetData[T apiData](url string, schema T) {
 
 	defer r.Body.Close()
 
-	body, err := ioutil.ReadAll(r.Body)
+	body, err := io.ReadAll(r.Body)
 
 	if err != nil {
 		log.Fatal(err)
@@ -106,6 +106,7 @@ func (db *database) GetLocations() Locations {
 
 	return nil
 }
+
 func (db *database) GetRelations() Relations {
 	if db.Relations != nil {
 		return db.Relations
@@ -113,6 +114,7 @@ func (db *database) GetRelations() Relations {
 
 	return nil
 }
+
 func (db *database) GetDates() Dates {
 	if db.Dates != nil {
 		return db.Dates
@@ -148,5 +150,5 @@ func initWithAPIdata() *database {
 }
 
 func init() {
-	DB = *initWithAPIdata()
+	DB = initWithAPIdata()
 }
