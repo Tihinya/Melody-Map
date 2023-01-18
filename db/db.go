@@ -2,7 +2,7 @@ package db
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 )
@@ -36,7 +36,7 @@ type indexLocations struct {
 
 type date struct {
 	Id    int      `json:"id"`
-	Dates []string `json:"dates"`
+	Dates []string `json:"date"`
 }
 
 type dates []date
@@ -77,7 +77,7 @@ func GetData[T apiData](url string, schema T) {
 
 	defer r.Body.Close()
 
-	body, err := ioutil.ReadAll(r.Body)
+	body, err := io.ReadAll(r.Body)
 
 	if err != nil {
 		log.Fatal(err)
@@ -110,7 +110,6 @@ func (db *database) GetRelations() relations {
 	if db.Relations != nil {
 		return db.Relations
 	}
-
 	return nil
 }
 func (db *database) GetDates() dates {

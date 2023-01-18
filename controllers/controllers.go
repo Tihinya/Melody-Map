@@ -10,6 +10,8 @@ import (
 // DB
 
 type Card struct {
+	FirstAlbum   string
+	Location     []string
 	Image        string
 	GroupName    string
 	CreationDate int
@@ -27,12 +29,13 @@ func MainPage(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(http.StatusInternalServerError, err)
 	}
 
-	md := MainData{
+	md := &MainData{
 		Cards: []Card{},
 	}
 
 	for _, artist := range db.DB.GetArtists() {
 		card := Card{
+			FirstAlbum:   artist.FirstAlbum,
 			Image:        artist.Image,
 			GroupName:    artist.Name,
 			CreationDate: artist.CreationDate,
@@ -40,6 +43,12 @@ func MainPage(w http.ResponseWriter, r *http.Request) {
 		}
 
 		md.Cards = append(md.Cards, card)
+	}
+
+	for i, location := range db.DB.GetLocations() {
+
+		md.Cards[i].Location = location.Location
+
 	}
 
 	err = t.Execute(w, md)
@@ -60,5 +69,16 @@ func FullInfo(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		fmt.Println(http.StatusInternalServerError, err)
+	}
+}
+
+func Search(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+
+	query := r.FormValue("query")
+	fmt.Println(query)
+
+	if len(query) == 0 {
+		fmt.Println(http.StatusInternalServerError, "Nothing to Found")
 	}
 }

@@ -9,12 +9,42 @@
 </head>
 <body>
     <div class="header">
-    
+        <div class="searchBox">
+            <input list="searchInput" >
+            <div class="search-bar">
+                <form action="/search" method="GET">
+                    <datalist id="searchInput">
+                        {{ range .Cards }}
+                            <option value={{.GroupName}}>Artist: {{.GroupName}} </option>
+                            {{range .Members}}
+                                <option value={{.}} >Member: {{.}} </option>
+                            {{end}}
+                            {{range .Location}}
+                                <option value={{.}} >Location: {{.}} </option>
+                            {{end}}
+                            <option value={{.FirstAlbum}}>First Album: {{.FirstAlbum}} </option>
+                            <option value={{.CreationDate}}>Creation Date: {{.CreationDate}} </option>
+                        {{ end }}
+                </datalist>
+                </form>
+                </div>  
+        </div>
     </div>
     <div class="main-container">
         {{ range .Cards }}
         {{ template "card" . }}
         {{ end }}
+        <!-- <div class="card">
+            <div class="card__header">Rick Astley</div>
+            <div class="card__main">
+                <div class="main__picture" style="background-image:url;"></div>
+                <div class="group">
+                    <div class="group__text">1966</div>
+                    Rick Astley
+                        <div class="group__text">Rick</div>
+                </div>
+            </div>
+        </div> -->
     </div>
 </body>
 
