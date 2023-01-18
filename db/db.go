@@ -8,7 +8,7 @@ import (
 )
 
 // API schemas
-type Artist struct {
+type artist struct {
 	Id           int      `json:"id"`
 	Image        string   `json:"image"`
 	Name         string   `json:"name"`
@@ -20,50 +20,50 @@ type Artist struct {
 	Relations    string   `json:"relations"`
 }
 
-type Artists []Artist
+type artists []artist
 
-type Location struct {
+type location struct {
 	Id       int      `json:"id"`
 	Location []string `json:"locations"`
 	Dates    string   `json:"dates"`
 }
 
-type Locations []Location
+type locations []location
 
-type IndexLocations struct {
-	Index Locations `json:"index"`
+type indexLocations struct {
+	Index locations `json:"index"`
 }
 
-type Date struct {
+type date struct {
 	Id    int      `json:"id"`
 	Dates []string `json:"dates"`
 }
 
-type Dates []Date
+type dates []date
 
-type IndexDates struct {
-	Index Dates `json:"index"`
+type indexDates struct {
+	Index dates `json:"index"`
 }
 
-type Relation struct {
+type relation struct {
 	Id             int                 `json:"id"`
 	DatesLocations map[string][]string `json:"datesLocations"`
 }
-type Relations []Relation
+type relations []relation
 
-type IndexRelations struct {
-	Index Relations `json:"index"`
+type indexRelations struct {
+	Index relations `json:"index"`
 }
 
 type database struct {
-	Dates     Dates
-	Locations Locations
-	Relations Relations
-	Artists   Artists
+	Dates     dates
+	Locations locations
+	Relations relations
+	Artists   artists
 }
 
 type apiData interface {
-	*IndexDates | *IndexLocations | *IndexRelations | *Artists
+	*indexDates | *indexLocations | *indexRelations | *artists
 }
 
 var DB database
@@ -91,7 +91,7 @@ func GetData[T apiData](url string, schema T) {
 }
 
 // TODO takes a custom filter
-func (db *database) GetArtists() Artists {
+func (db *database) GetArtists() artists {
 	if db.Artists != nil {
 		return db.Artists
 	}
@@ -99,21 +99,21 @@ func (db *database) GetArtists() Artists {
 	return nil
 }
 
-func (db *database) GetLocations() Locations {
+func (db *database) GetLocations() locations {
 	if db.Locations != nil {
 		return db.Locations
 	}
 
 	return nil
 }
-func (db *database) GetRelations() Relations {
+func (db *database) GetRelations() relations {
 	if db.Relations != nil {
 		return db.Relations
 	}
 
 	return nil
 }
-func (db *database) GetDates() Dates {
+func (db *database) GetDates() dates {
 	if db.Dates != nil {
 		return db.Dates
 	}
@@ -127,10 +127,10 @@ func (db *database) GetArtistById() {}
 
 // initializes db with API data
 func initWithAPIdata() *database {
-	var dates IndexDates
-	var locations IndexLocations
-	var relations IndexRelations
-	var artists Artists
+	var dates indexDates
+	var locations indexLocations
+	var relations indexRelations
+	var artists artists
 
 	GetData("https://groupietrackers.herokuapp.com/api/artists", &artists)
 	GetData("https://groupietrackers.herokuapp.com/api/dates", &dates)
