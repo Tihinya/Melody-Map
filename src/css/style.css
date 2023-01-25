@@ -158,9 +158,9 @@
     aspect-ratio: 1/1;
     position: relative;
     z-index: 1;
-    appearance: none;nagoya-japan
+    appearance: none;
     height: var(--pointHeight);
-    border-radius: 50%;nagoya-japan
+    border-radius: 50%;
     padding: 7% 0 0 30%;
 }
 
