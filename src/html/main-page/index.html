@@ -10,42 +10,103 @@
 <body>
     <div class="header">
         <div class="searchBox">
-            <input list="searchInput" >
+            <input list="searchInput" class="input" placeholder="Search...">
             <div class="search-bar">
                 <form action="/search" method="GET">
                     <datalist id="searchInput">
                         {{ range .Cards }}
-                            <option value={{.GroupName}}>Artist: {{.GroupName}} </option>
-                            {{range .Members}}
-                                <option value={{.}} >Member: {{.}} </option>
-                            {{end}}
-                            {{range .Location}}
-                                <option value={{.}} >Location: {{.}} </option>
-                            {{end}}
-                            <option value={{.FirstAlbum}}>First Album: {{.FirstAlbum}} </option>
-                            <option value={{.CreationDate}}>Creation Date: {{.CreationDate}} </option>
+                            <option value={{.GroupName}}>{{.GroupName}} </option>
                         {{ end }}
                 </datalist>
                 </form>
                 </div>  
         </div>
     </div>
+    <div class="filter-menu_closed">
+        <div class="filter-menu_open">
+            <div class="left-grid">
+             <div class="range-slider">
+                <span class="creation-date">Creation Date</span>
+                <div class="grid-grid">
+                    <label for="range-from" class="range-from"><span id="output1">1960</span></label>
+                    <div class="input-wrapper">
+                        <input id="range-from-cd" type="range" min="1950" max="2022" value="1960">
+                        <input id="range-to-cd" type="range" min="1950" max="2022" value="2010">
+                    </div>
+                    <label for="range-to"><span id="output2">2010</span></label>
+                </div>
+             </div>
+             <div class="range-slider">
+                <span class="first-album">First Album</span>
+                <div class="grid-grid">
+                    <label for="range-from" class="range-from"><span id="output3">1960</span></label>
+                    <div class="input-wrapper">
+                        <input id="range-from-fa" type="range" min="1950" max="2022" value="1960">
+                        <input id="range-to-fa" type="range" min="1950" max="2022" value="2010">
+                    </div>
+                    <label for="range-to"><span id="output4">2010</span></label>
+                </div>
+             </div>
+            </div>
+            <div class="right-grid">
+                <div class="check-div">
+                    <span class="num-members">Members</span>
+                    <div class="checkbox">
+                        <input type="checkbox" id="num-members-1" name="num-members" value="1" class="box-style">
+                        <label for="num-members-1">1</label>
+                        <input type="checkbox" id="num-members-2" name="num-members" value="2" class="box-style">
+                        <label for="num-members-2">2</label>
+                        <input type="checkbox" id="num-members-3" name="num-members" value="3" class="box-style">
+                        <label for="num-members-3">3</label>
+                        <input type="checkbox" id="num-members-4" name="num-members" value="4" class="box-style"> 
+                        <label for="num-members-4">4</label>
+                        <input type="checkbox" id="num-members-5" name="num-members" value="5" class="box-style">
+                        <label for="num-members-5">5</label>
+                        <input type="checkbox" id="num-members-6" name="num-members" value="6" class="box-style">
+                        <label for="num-members-6">6</label>
+                        <input type="checkbox" id="num-members-7" name="num-members" value="7" class="box-style">
+                        <label for="num-members-7">7</label>
+                        <input type="checkbox" id="num-members-8" name="num-members" value="8" class="box-style">
+                        <label for="num-members-8">8</label>
+                        </div>
+
+                        <div class="location-div">
+                            <span class="style-location">Location</span>
+                            <div class="location-select">
+                                <input placeholder="Locations" list="searchtype" class="selectorLocation" >
+                                <datalist id="searchtype">
+                                    {{ range .Cards}}
+                                    {{ range .Location}}
+                                    <option value="{{.}}">{{.}}</option>
+                                    {{end}}
+                                    {{end}}
+                                </datalist>
+                            </div>
+                        </div>
+                </div>
+                </div>
+                  
+            </div>
+    </div>
+    </div>
     <div class="main-container">
         {{ range .Cards }}
         {{ template "card" . }}
         {{ end }}
-        <!-- <div class="card">
+        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" class="rick-style">
+        <div class="Rick-card">
             <div class="card__header">Rick Astley</div>
             <div class="card__main">
-                <div class="main__picture" style="background-image:url;"></div>
+                <div class="main__picture"></div>
                 <div class="group">
                     <div class="group__text">1966</div>
-                    Rick Astley
-                        <div class="group__text">Rick</div>
+                        <div class="group__text">Rick Astley</div>
                 </div>
             </div>
-        </div> -->
+        </div>
+        </a>
     </div>
+    <script type="module" src="src/js/range.js"></script>
 </body>
 
 </html>

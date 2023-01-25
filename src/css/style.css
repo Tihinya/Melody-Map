@@ -1,15 +1,14 @@
 :root {
     --additionalColor: #6C6C6C;
     --mainColor: #8F8F8F;
-
+    --pointHeight: 20px;
     --headerHeight: 84px;
 }
 
 .header {
-    position: fixed;
+    position: block;
     width: 100%;
     height: var(--headerHeight);
-
     background: var(--additionalColor);
 
     z-index: 1;
@@ -23,7 +22,6 @@
     gap: 44px;
 
     position: relative;
-    top: var(--headerHeight);
 
     padding: 40px 120px;
 
@@ -79,13 +77,11 @@
 
 .main__picture {
     box-sizing: border-box;
-
     width: 100%;
-    height: 100%;
-
-    background-repeat: no-repeat;
+    display: grid;
     background-size: cover;
     background-position: center;
+    background-image: url(https://americansongwriter.com/wp-content/uploads/2022/03/RickAstley.jpeg?fit=2000%2C800);
 }
 
 .group {
@@ -104,4 +100,122 @@
 
     font-size: 20px;
     color: #fff;
+}
+
+.rick-style {
+    text-decoration: none;
+}
+
+.searchBox {
+    text-align: center;
+}
+
+.input {
+    padding-left: 13px;
+    margin-top: 25px;
+    width: 30%;
+    height: 30px;
+    border-radius: 30px;
+    border: none;
+}
+
+
+.filter-menu_open {
+    color: white;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    height: 320px;
+    background-color: rgb(37, 37, 37);
+}
+
+.range-slider {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+}
+
+.grid-grid {
+    display: grid;
+    grid-template-columns: 5% 1fr 53%;
+}
+
+.input-wrapper {
+    display: block;
+}
+
+.range-slider input[type=range] {
+    all: inherit;
+    position: absolute;
+    border-radius: 14px;
+    background: #F1EFEF;
+    width: 20%;
+    height: var(--pointHeight);
+}
+
+.range-slider input[type=range]::-webkit-slider-thumb {
+    aspect-ratio: 1/1;
+    position: relative;
+    z-index: 1;
+    appearance: none;nagoya-japan
+    height: var(--pointHeight);
+    border-radius: 50%;nagoya-japan
+    padding: 7% 0 0 30%;
+}
+
+.right-grid {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    gap: 40px;
+    padding: 7% 0 0 30%;
+}
+
+.creation-date {
+    font-size: 46px;
+    width: 50%;
+    text-align: center;
+}
+
+.first-album {
+    font-size: 46px;
+    width: 50%;
+    text-align: center;
+}
+
+
+
+.num-members {
+    font-size: 46px;
+    padding: 35% 10%;
+
+}
+
+.checkbox {
+    padding-right: 100px;
+}
+
+.box-style {
+    width: 17px;
+    height: 17px;
+    margin: 0px 10px 0px 3px;
+}
+
+.location-div {
+    display: block;
+    padding-top: 5%;
+}
+
+.selectorLocation {
+    width: 38%;
+    height: 30px;
+    border-radius: 30px;
+    border: none;
+    padding-left: 13px;
+}
+
+.style-location {
+    font-size: 46px;
+    padding-left: 10%;
 }

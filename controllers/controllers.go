@@ -33,7 +33,14 @@ func MainPage(w http.ResponseWriter, r *http.Request) {
 		Cards: []Card{},
 	}
 
+	// temp := make(map[int]int)
+
 	for _, artist := range db.DB.GetArtists() {
+		// num := len(artist.Members)
+		// count := temp[num]
+		// count++
+		// temp[num] = count
+
 		card := Card{
 			FirstAlbum:   artist.FirstAlbum,
 			Image:        artist.Image,
@@ -44,6 +51,10 @@ func MainPage(w http.ResponseWriter, r *http.Request) {
 
 		md.Cards = append(md.Cards, card)
 	}
+
+	// for k, v := range temp {
+	// 	fmt.Printf("%d: %d\n", k, v)
+	// }
 
 	for i, location := range db.DB.GetLocations() {
 
@@ -78,7 +89,4 @@ func Search(w http.ResponseWriter, r *http.Request) {
 	query := r.FormValue("query")
 	fmt.Println(query)
 
-	if len(query) == 0 {
-		fmt.Println(http.StatusInternalServerError, "Nothing to Found")
-	}
 }
