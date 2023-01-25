@@ -22,69 +22,56 @@
                     </datalist>
                 </form>
             </div>
+            <div class="aboba" id="change-filters" style="height: 32px; width: 80px; background: #fff; cursor: pointer;"></div>
         </div>
     </div>
-    <div class="filter-menu_closed">
-        <div class="filter-menu_open">
-            <div class="left-grid">
-                <div class="component">
-                    <div class="creation-date">Creation Date</div>
-                    <div class="grid-grid">
-                        <div id="output1">1960</div>
-                        <div class="range-slider">
-                            <input id="range-from-cd" type="range" min="1950" max="2022" value="1960">
-                            <input id="range-to-cd" type="range" min="1950" max="2022" value="2010">
-                        </div>
-                        <div id="output2">2010</div>
+    <div class="filter" id="filters">
+        <div class="filter__column">
+            <div class="component">
+                <div class="component__name">Creation Date</div>
+                <div class="grid-grid">
+                    <div id="output1">1960</div>
+                    <div class="range-slider">
+                        <input id="range-from-cd" type="range" min="1950" max="2022" value="1960">
+                        <input id="range-to-cd" type="range" min="1950" max="2022" value="2010">
                     </div>
-                </div>
-                <div class="component">
-                    <div class="first-album">First Album</div>
-                    <div class="grid-grid">
-                        <div id="output3">1960</div>
-                        <div class="range-slider">
-                            <input id="range-from-fa" type="range" min="1950" max="2022" value="1960">
-                            <input id="range-to-fa" type="range" min="1950" max="2022" value="2010">
-                        </div>
-                        <div id="output4">2010</div>
-                    </div>
+                    <div id="output2">2010</div>
                 </div>
             </div>
-            <div class="right-grid">
-                <div class="component">
-                    <span class="num-members">Members</span>
-                    <div class="checkbox">
-                        <input type="checkbox" id="num-members-1" name="num-members" value="1">
-                        <label for="num-members-1">1</label>
-                        <input type="checkbox" id="num-members-2" name="num-members" value="2">
-                        <label for="num-members-2">2</label>
-                        <input type="checkbox" id="num-members-3" name="num-members" value="3">
-                        <label for="num-members-3">3</label>
-                        <input type="checkbox" id="num-members-4" name="num-members" value="4">
-                        <label for="num-members-4">4</label>
-                        <input type="checkbox" id="num-members-5" name="num-members" value="5">
-                        <label for="num-members-5">5</label>
-                        <input type="checkbox" id="num-members-6" name="num-members" value="6">
-                        <label for="num-members-6">6</label>
-                        <input type="checkbox" id="num-members-7" name="num-members" value="7">
-                        <label for="num-members-7">7</label>
-                        <input type="checkbox" id="num-members-8" name="num-members" value="8">
-                        <label for="num-members-8">8</label>
+            <div class="component">
+                <div class="component__name">First Album</div>
+                <div class="grid-grid">
+                    <div id="output3">1960</div>
+                    <div class="range-slider">
+                        <input id="range-from-fa" type="range" min="1950" max="2022" value="1960">
+                        <input id="range-to-fa" type="range" min="1950" max="2022" value="2010">
                     </div>
+                    <div id="output4">2010</div>
                 </div>
+            </div>
+        </div>
+        <div class="filter__column ">
+            <div class="component">
+                <div class="component__name">Members</div>
+                <div class="checkbox">
+                    {{ range .CountMembers }}
+                    <input type="checkbox" id="num-members-{{ . }}" name="num-members" value="{{ . }}">
+                    <label for="num-members-{{ . }}">{{ . }}</label>
+                    {{ end }}
+                </div>
+            </div>
 
-                <div class="component">
-                    <span class="style-location">Location</span>
-                    <div class="location-select">
-                        <input placeholder="Locations" list="searchtype" class="selector-location">
-                        <datalist id="searchtype">
-                            {{ range .Cards}}
-                            {{ range .Location}}
-                            <option value="{{.}}">{{.}}</option>
-                            {{end}}
-                            {{end}}
-                        </datalist>
-                    </div>
+            <div class="component">
+                <div class="component__name">Location</div>
+                <div class="location-select">
+                    <input placeholder="Locations" list="searchtype" class="selector-location">
+                    <datalist id="searchtype">
+                        {{ range .Cards}}
+                        {{ range .Location}}
+                        <option value="{{.}}">{{.}}</option>
+                        {{end}}
+                        {{end}}
+                    </datalist>
                 </div>
             </div>
         </div>

@@ -5,6 +5,7 @@ import (
 	"groupie-tracker/db"
 	"html/template"
 	"net/http"
+	"sort"
 )
 
 // DB
@@ -19,7 +20,8 @@ type Card struct {
 }
 
 type MainData struct {
-	Cards []Card
+	Cards        []Card
+	CountMembers []int
 }
 
 func MainPage(w http.ResponseWriter, r *http.Request) {
@@ -30,16 +32,16 @@ func MainPage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	md := &MainData{
-		Cards: []Card{},
+		Cards:        []Card{},
+		CountMembers: make([]int, 0),
 	}
 
-	// temp := make(map[int]int)
+	temp := make(map[int]int)
 
 	for _, artist := range db.DB.GetArtists() {
-		// num := len(artist.Members)
-		// count := temp[num]
-		// count++
-		// temp[num] = count
+		num := len(artist.Members)
+
+		temp[num] = 0
 
 		card := Card{
 			FirstAlbum:   artist.FirstAlbum,
@@ -52,9 +54,11 @@ func MainPage(w http.ResponseWriter, r *http.Request) {
 		md.Cards = append(md.Cards, card)
 	}
 
-	// for k, v := range temp {
-	// 	fmt.Printf("%d: %d\n", k, v)
-	// }
+	for k := range temp {
+		md.CountMembers = append(md.CountMembers, k)
+	}
+
+	sort.Ints(md.CountMembers)
 
 	for i, location := range db.DB.GetLocations() {
 

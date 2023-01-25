@@ -21,6 +21,8 @@
     position: relative;
     padding: 40px 120px;
     background: var(--mainColor);
+
+    z-index: 2;
 }
 
 .card {
@@ -104,14 +106,30 @@
     border: none;
 }
 
-.filter-menu_open {
-    color: white;
-    width: 100%;
+.filter {
+    position: relative;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    position: relative;
-    height: 320px;
+    
+    width: 100%;
+    max-height: 320px;
+    
+    color: white;
     background-color: rgb(37, 37, 37);
+
+    transition: max-height 500ms ease-in-out;
+}
+
+.filter__column {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+
+    padding: 40px 0;
+
+    width: 100%;
 }
 
 .component {
@@ -119,6 +137,10 @@
     flex-direction: column;
 
     align-items: center;
+}
+
+.component__name {
+    font-size: 46px;
 }
 
 .grid-grid {
@@ -151,37 +173,10 @@
     background-color: #000;
 }
 
-.right-grid,
-.left-grid {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 40px;
-
-    width: 100%;
-}
-
-.creation-date {
-    font-size: 46px;
-}
-
-.first-album {
-    font-size: 46px;
-}
-
-.num-members {
-    font-size: 46px;
-}
-
 .selector-location {
     padding: 8px 12px;
     border-radius: 30px;
     border: none;
-}
-
-.style-location {
-    font-size: 46px;
 }
 
 .checkbox {
