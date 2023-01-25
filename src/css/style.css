@@ -114,7 +114,7 @@
     background-color: rgb(37, 37, 37);
 }
 
-.test-class {
+.component {
     display: flex;
     flex-direction: column;
 
@@ -172,33 +172,27 @@
 
 .num-members {
     font-size: 46px;
-    padding: 35% 10%;
-}
-
-.checkbox {
-    padding-right: 100px;
-}
-
-.box-style {
-    width: 17px;
-    height: 17px;
-    margin: 0px 10px 0px 3px;
-}
-
-.location-div {
-    display: block;
-    padding-top: 5%;
 }
 
 .selector-location {
-    width: 38%;
-    height: 30px;
+    padding: 8px 12px;
     border-radius: 30px;
     border: none;
-    padding-left: 13px;
 }
 
 .style-location {
     font-size: 46px;
-    padding-left: 10%;
+}
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    font-size: 24px;
+}
+
+.checkbox input{
+    aspect-ratio: 1/1;
+    height: 18px;
 }

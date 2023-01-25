@@ -27,8 +27,8 @@
     <div class="filter-menu_closed">
         <div class="filter-menu_open">
             <div class="left-grid">
-                <div class="test-class">
-                    <span class="creation-date">Creation Date</span>
+                <div class="component">
+                    <div class="creation-date">Creation Date</div>
                     <div class="grid-grid">
                         <div id="output1">1960</div>
                         <div class="range-slider">
@@ -38,8 +38,8 @@
                         <div id="output2">2010</div>
                     </div>
                 </div>
-                <div class="test-class">
-                    <span class="first-album">First Album</span>
+                <div class="component">
+                    <div class="first-album">First Album</div>
                     <div class="grid-grid">
                         <div id="output3">1960</div>
                         <div class="range-slider">
@@ -51,43 +51,42 @@
                 </div>
             </div>
             <div class="right-grid">
-                <div class="check-div">
+                <div class="component">
                     <span class="num-members">Members</span>
                     <div class="checkbox">
-                        <input type="checkbox" id="num-members-1" name="num-members" value="1" class="box-style">
+                        <input type="checkbox" id="num-members-1" name="num-members" value="1">
                         <label for="num-members-1">1</label>
-                        <input type="checkbox" id="num-members-2" name="num-members" value="2" class="box-style">
+                        <input type="checkbox" id="num-members-2" name="num-members" value="2">
                         <label for="num-members-2">2</label>
-                        <input type="checkbox" id="num-members-3" name="num-members" value="3" class="box-style">
+                        <input type="checkbox" id="num-members-3" name="num-members" value="3">
                         <label for="num-members-3">3</label>
-                        <input type="checkbox" id="num-members-4" name="num-members" value="4" class="box-style">
+                        <input type="checkbox" id="num-members-4" name="num-members" value="4">
                         <label for="num-members-4">4</label>
-                        <input type="checkbox" id="num-members-5" name="num-members" value="5" class="box-style">
+                        <input type="checkbox" id="num-members-5" name="num-members" value="5">
                         <label for="num-members-5">5</label>
-                        <input type="checkbox" id="num-members-6" name="num-members" value="6" class="box-style">
+                        <input type="checkbox" id="num-members-6" name="num-members" value="6">
                         <label for="num-members-6">6</label>
-                        <input type="checkbox" id="num-members-7" name="num-members" value="7" class="box-style">
+                        <input type="checkbox" id="num-members-7" name="num-members" value="7">
                         <label for="num-members-7">7</label>
-                        <input type="checkbox" id="num-members-8" name="num-members" value="8" class="box-style">
+                        <input type="checkbox" id="num-members-8" name="num-members" value="8">
                         <label for="num-members-8">8</label>
                     </div>
+                </div>
 
-                    <div class="location-div">
-                        <span class="style-location">Location</span>
-                        <div class="location-select">
-                            <input placeholder="Locations" list="searchtype" class="selector-location">
-                            <datalist id="searchtype">
-                                {{ range .Cards}}
-                                {{ range .Location}}
-                                <option value="{{.}}">{{.}}</option>
-                                {{end}}
-                                {{end}}
-                            </datalist>
-                        </div>
+                <div class="component">
+                    <span class="style-location">Location</span>
+                    <div class="location-select">
+                        <input placeholder="Locations" list="searchtype" class="selector-location">
+                        <datalist id="searchtype">
+                            {{ range .Cards}}
+                            {{ range .Location}}
+                            <option value="{{.}}">{{.}}</option>
+                            {{end}}
+                            {{end}}
+                        </datalist>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
     </div>
