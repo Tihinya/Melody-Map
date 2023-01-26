@@ -14,15 +14,6 @@ function showValue4(newValue) {
   document.getElementById("output4").innerHTML = newValue;
 }
 
-let state = true
-const filters =  document.getElementById("filters")
-
-document.getElementById("change-filters").onclick = () => {
-  state = !state
-  state ? filters.style.maxHeight = "320px" : filters.style.maxHeight = "0px"
-}
-
-
 document.getElementById("range-from-cd").oninput = (e) => {
   showValue1(e.target.value)
 }
@@ -40,4 +31,13 @@ document.getElementById("range-from-fa").oninput = (e) => {
 
 document.getElementById("range-to-fa").oninput = (e) => {
   showValue4(e.target.value)
+}
+
+
+let state = true
+const filters =  document.getElementById("filters")
+
+document.getElementById("change-filters").onclick = () => {
+  state = !state
+  state ? filters.style.maxHeight = "320px" : filters.style.maxHeight = "0px"
 }

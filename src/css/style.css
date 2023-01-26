@@ -6,11 +6,17 @@
 }
 
 .header {
-    position: block;
     width: 100%;
     height: var(--headerHeight);
     background: var(--additionalColor);
     z-index: 1;
+}
+
+.aboba {
+    height: 42px; 
+    width: 80px; 
+    background: #fff; 
+    cursor: pointer;
 }
 
 .main-container {

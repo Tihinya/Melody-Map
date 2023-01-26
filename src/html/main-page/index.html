@@ -22,7 +22,7 @@
                     </datalist>
                 </form>
             </div>
-            <div class="aboba" id="change-filters" style="height: 32px; width: 80px; background: #fff; cursor: pointer;"></div>
+            <div class="aboba" id="change-filters"></div>
         </div>
     </div>
     <div class="filter" id="filters">
@@ -66,10 +66,8 @@
                 <div class="location-select">
                     <input placeholder="Locations" list="searchtype" class="selector-location">
                     <datalist id="searchtype">
-                        {{ range .Cards}}
                         {{ range .Location}}
                         <option value="{{.}}">{{.}}</option>
-                        {{end}}
                         {{end}}
                     </datalist>
                 </div>
