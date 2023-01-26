@@ -20,8 +20,9 @@ type Card struct {
 }
 
 type MainData struct {
-	Cards        []Card
-	CountMembers []int
+	Cards         []Card
+	CountMembers  []int
+	CountLocation []string
 }
 
 func MainPage(w http.ResponseWriter, r *http.Request) {
@@ -32,8 +33,9 @@ func MainPage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	md := &MainData{
-		Cards:        []Card{},
-		CountMembers: make([]int, 0),
+		Cards:         []Card{},
+		CountMembers:  make([]int, 0),
+		CountLocation: make([]string, 0),
 	}
 
 	temp := make(map[int]int)
@@ -60,11 +62,24 @@ func MainPage(w http.ResponseWriter, r *http.Request) {
 
 	sort.Ints(md.CountMembers)
 
+	locat := make(map[string]int)
+
 	for i, location := range db.DB.GetLocations() {
 
 		md.Cards[i].Location = location.Location
+		var loc string
+		for _, a := range location.Location {
+			loc = a
+		}
+		//fmt.Println(loc)
+		locat[loc] = i
 
 	}
+
+	for k := range locat {
+		md.CountLocation = append(md.CountLocation, k)
+	}
+	fmt.Println(md.CountLocation[0])
 
 	err = t.Execute(w, md)
 
