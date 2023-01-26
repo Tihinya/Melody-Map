@@ -34,7 +34,7 @@ document.getElementById("range-to-fa").oninput = (e) => {
 }
 
 
-let state = true
+let state = false
 const filters =  document.getElementById("filters")
 
 document.getElementById("change-filters").onclick = () => {

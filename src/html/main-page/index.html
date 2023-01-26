@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <title>ascii-art-web</title>
@@ -7,21 +8,20 @@
     <link rel="stylesheet" href="src/css/normalize.css">
     <link rel="stylesheet" href="src/css/style.css">
 </head>
+
 <body>
     <div class="header">
-        <div class="searchBox">
+        <div class="search-box">
             <input list="searchInput" class="input" placeholder="Search...">
-            <div class="search-bar">
-                <form action="/search" method="GET">
-                    <datalist id="searchInput">
-                        {{ range .Cards }}
-                        <option value={{.GroupName}}>{{.GroupName}} </option>
-                        {{ end }}
-                    </datalist>
-                </form>
-            </div>
-            <div class="aboba" id="change-filters"></div>
+            <form action="/search" method="GET">
+                <datalist id="searchInput">
+                    {{ range .Cards }}
+                    <option value={{.GroupName}}>{{.GroupName}} </option>
+                    {{ end }}
+                </datalist>
+            </form>
         </div>
+        <div class="filter-button" id="change-filters"></div>
     </div>
     <div class="filter" id="filters">
         <div class="filter__column">
@@ -59,11 +59,11 @@
                 </div>
             </div>
             <div class="component">
-                <div class="component__name">Location</div>
+                <div class="component__name">Locations</div>
                 <div class="location-select">
                     <input placeholder="Locations" list="searchtype" class="selector-location">
                     <datalist id="searchtype">
-                        {{ range .Location}}
+                        {{ range .Locations}}
                         <option value="{{.}}">{{.}}</option>
                         {{end}}
                     </datalist>
@@ -91,4 +91,5 @@
     </div>
     <script type="module" src="src/js/range.js"></script>
 </body>
+
 </html>
