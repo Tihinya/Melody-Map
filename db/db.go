@@ -8,7 +8,7 @@ import (
 )
 
 // API schemas
-type artist struct {
+type Artist struct {
 	Id           int      `json:"id"`
 	Image        string   `json:"image"`
 	Name         string   `json:"name"`
@@ -20,7 +20,7 @@ type artist struct {
 	Relations    string   `json:"relations"`
 }
 
-type artists []artist
+type artists []Artist
 
 type location struct {
 	Id       int      `json:"id"`

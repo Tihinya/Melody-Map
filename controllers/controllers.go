@@ -6,6 +6,8 @@ import (
 	"html/template"
 	"net/http"
 	"sort"
+	"strconv"
+	"time"
 )
 
 // DB
@@ -25,13 +27,7 @@ type MainData struct {
 	Locations    []string
 }
 
-func MainPage(w http.ResponseWriter, r *http.Request) {
-	t, err := template.ParseFiles("src/html/main-page/index.html", "src/html/main-page/card.html")
-
-	if err != nil {
-		fmt.Println(http.StatusInternalServerError, err)
-	}
-
+func prepareData(arr []db.Artist) *MainData {
 	md := &MainData{
 		Cards:        []Card{},
 		CountMembers: make([]int, 0),
@@ -40,7 +36,7 @@ func MainPage(w http.ResponseWriter, r *http.Request) {
 
 	temp := make(map[int]int)
 
-	for _, artist := range db.DB.GetArtists() {
+	for _, artist := range arr {
 		num := len(artist.Members)
 
 		temp[num] = 0
@@ -64,20 +60,32 @@ func MainPage(w http.ResponseWriter, r *http.Request) {
 
 	locat := make(map[string]int)
 
-	for i, location := range db.DB.GetLocations() {
+	locations := db.DB.GetLocations()
 
-		md.Cards[i].Location = location.Location
+	for i := range md.Cards {
+		md.Cards[i].Location = locations[i].Location
 		var loc string
-		for _, a := range location.Location {
+		for _, a := range locations[i].Location {
 			loc = a
 		}
 		locat[loc] = i
-
 	}
 
 	for k := range locat {
 		md.Locations = append(md.Locations, k)
 	}
+
+	return md
+}
+
+func MainPage(w http.ResponseWriter, r *http.Request) {
+	t, err := template.ParseFiles("src/html/main-page/index.html", "src/html/main-page/card.html")
+
+	if err != nil {
+		fmt.Println(http.StatusInternalServerError, err)
+	}
+
+	md := prepareData(db.DB.GetArtists())
 
 	err = t.Execute(w, md)
 
@@ -101,9 +109,75 @@ func FullInfo(w http.ResponseWriter, r *http.Request) {
 }
 
 func Search(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm()
+	groupName := r.FormValue("search-input")
 
-	query := r.FormValue("query")
-	fmt.Println(query)
+	if r.Method != "GET" {
+		fmt.Println(http.StatusBadRequest)
+		return
+	}
+
+	fmt.Println(groupName)
+
+}
+
+func Filter(w http.ResponseWriter, r *http.Request) {
+	var filteredData []db.Artist
+
+	r.ParseForm()
+	if r.Method != "GET" {
+		w.WriteHeader(http.StatusBadRequest)
+	}
+	CdInputStart := r.FormValue("creation-data-from")
+	CdInputEnd := r.FormValue("creation-data-to")
+	FaInputStart := r.FormValue("first-album-from")
+	FaInputEnd := r.FormValue("first-album-to")
+	// Checkbox := r.Form["num-members"]
+	// Location := r.FormValue("location")
+
+	data := db.DB.GetArtists()
+
+	startDate, _ := strconv.Atoi(CdInputStart)
+	endDate, _ := strconv.Atoi(CdInputEnd)
+	//[len(FaInputStart)-4:]
+	startAlbumDate, _ := strconv.Atoi(FaInputStart)
+	endAlbumDate, _ := strconv.Atoi(FaInputEnd)
+
+	if startDate > endDate {
+		startDate, endDate = endDate, startDate
+	}
+
+	if startAlbumDate > endAlbumDate {
+		startAlbumDate, endAlbumDate = endAlbumDate, startAlbumDate
+	}
+
+	//fmt.Printf("min: %d, max: %d\n min album: %d, max album: %d\n", startDate, endDate, startAlbumDate, endAlbumDate)
+
+	for _, item := range data {
+		a, _ := time.Parse("02-01-2006", item.FirstAlbum)
+
+		year := a.Year()
+		fmt.Println(year)
+
+		if item.CreationDate < startDate || item.CreationDate > endDate {
+			continue
+		}
+		if year < startAlbumDate || year > endAlbumDate {
+			continue
+		}
+
+		filteredData = append(filteredData, item)
+	}
+
+	md := prepareData(filteredData)
+
+	t, err := template.ParseFiles("src/html/main-page/index.html", "src/html/main-page/card.html")
+	if err != nil {
+		fmt.Println(http.StatusInternalServerError, err)
+	}
+
+	err = t.Execute(w, md)
+	if err != nil {
+		fmt.Println(http.StatusInternalServerError, err)
+	}
 
 }

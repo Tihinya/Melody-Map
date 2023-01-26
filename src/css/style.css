@@ -21,6 +21,8 @@
     aspect-ratio: 328/201;
     height: 100%;
 
+    color: aliceblue;
+
     background: url("/src/assets/filter-button.svg");
     background-size: cover;
     cursor: pointer;
@@ -84,7 +86,6 @@
     display: grid;
     background-size: cover;
     background-position: center;
-    background-image: url(https://americansongwriter.com/wp-content/uploads/2022/03/RickAstley.jpeg?fit=2000%2C800);
 }
 
 .group {
@@ -129,11 +130,11 @@
 .filter {
     position: relative;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    
+    grid-template-columns: 1fr 0.2fr 1fr;
+
     width: 100%;
     max-height: 0px;
-    
+
     color: white;
     background-color: rgb(37, 37, 37);
 
@@ -150,6 +151,26 @@
     padding: 40px 0;
 
     width: 100%;
+}
+
+.submit-filter {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+
+    height: 100%;
+
+    padding: 40px 0;
+}
+
+.submit-filter input[type="submit"] {
+    width: 100%;
+    border-radius: 14px;
+
+    color: white;
+    font-size: 20px;
+    background: #6C6C6C;
 }
 
 .component {
@@ -203,11 +224,11 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    
+
     font-size: 24px;
 }
 
-.checkbox input{
+.checkbox input {
     aspect-ratio: 1/1;
     height: 18px;
 }
