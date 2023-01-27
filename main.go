@@ -9,6 +9,7 @@ import (
 func main() {
 	http.HandleFunc("/", controllers.MainPage)
 	http.HandleFunc("/full", controllers.FullInfo)
+	http.HandleFunc("/dateslocations", controllers.DatesLocations) // API endpoint for fetching google maps data
 
 	http.Handle("/src/", http.StripPrefix("/src/", http.FileServer(http.Dir("./src/"))))
 

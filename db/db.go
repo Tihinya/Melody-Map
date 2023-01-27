@@ -90,7 +90,6 @@ func GetData[T apiData](url string, schema T) {
 	}
 }
 
-// TODO takes a custom filter
 func (db *database) GetArtists() artists {
 	if db.Artists != nil {
 		return db.Artists
