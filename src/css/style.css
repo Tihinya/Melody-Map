@@ -5,6 +5,10 @@
     --headerHeight: 84px;
 }
 
+body {
+    background: var(--mainColor);
+}
+
 .header {
     box-sizing: border-box;
     display: flex;

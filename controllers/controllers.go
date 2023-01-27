@@ -62,19 +62,11 @@ func prepareData(arr []db.Artist) *MainData {
 
 	locations := db.DB.GetLocations()
 
-	// for _, v := range locations {
-	// 	for _, v1 := range v.Location {
-	// 		locat[v1] = nil
-	// 	}
-	// }
-
-	for i := range md.Cards {
-		md.Cards[i].Location = locations[i].Location
-		var loc string
-		for _, a := range locations[i].Location {
-			loc = a
+	for _, v := range locations {
+		for _, v1 := range v.Location {
+			locat[v1] = nil
 		}
-		locat[loc] = nil
+
 	}
 
 	for k := range locat {
@@ -126,6 +118,16 @@ func Search(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func inSlice[T string | int](arr []T, compare T) bool {
+	for _, v := range arr {
+		if v == compare {
+			return true
+		}
+	}
+
+	return false
+}
+
 func Filter(w http.ResponseWriter, r *http.Request) {
 	var filteredData []db.Artist
 
@@ -148,7 +150,7 @@ func Filter(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	Location := r.FormValue("location")
+	locationInput := r.FormValue("location")
 
 	data := db.DB.GetArtists()
 
@@ -168,7 +170,9 @@ func Filter(w http.ResponseWriter, r *http.Request) {
 
 	//fmt.Printf("min: %d, max: %d\n min album: %d, max album: %d\n", startDate, endDate, startAlbumDate, endAlbumDate)
 
-	for _, item := range data {
+	b := db.DB.GetLocations()
+
+	for i, item := range data {
 		a, _ := time.Parse("02-01-2006", item.FirstAlbum)
 
 		year := a.Year()
@@ -176,45 +180,58 @@ func Filter(w http.ResponseWriter, r *http.Request) {
 		if item.CreationDate < startDate || item.CreationDate > endDate {
 			continue
 		}
+
 		if year < startAlbumDate || year > endAlbumDate {
 			continue
 		}
-		if len(memberSlice) == 0 && Location == "" {
-			continue
-		} else if len(memberSlice) != 0 && Location == "" {
-			for _, v := range memberSlice {
-				if len(item.Members) == v {
-					filteredData = append(filteredData, item)
-				}
-			}
-		} else if len(memberSlice) == 0 && Location != "" {
-			for _, location := range db.DB.Locations {
-				if item.Id == location.Id {
-					for _, place := range location.Location {
-						if Location == place {
-							filteredData = append(filteredData, item)
-						}
-					}
-				}
-			}
-		} else {
-			for _, v := range memberSlice {
-				if len(item.Members) == v {
-					for _, location := range db.DB.Locations {
-						if item.Id == location.Id {
-							for _, place := range location.Location {
-								if Location == place {
-									filteredData = append(filteredData, item)
-								}
-							}
 
-						}
-					}
-				}
-			}
+		if len(memberSlice) > 0 && !inSlice(memberSlice, len(item.Members)) {
+			continue
 		}
+
+		if locationInput != "" && !inSlice(b[i].Location, locationInput) {
+			continue
+		}
+		filteredData = append(filteredData, item)
+
+		// filteredData = append(filteredData, item)
+
+		// 	if len(memberSlice) == 0 && Location == "" {
+		// 		continue
+		// 	} else if len(memberSlice) != 0 && Location == "" {
+		// 		for _, v := range memberSlice {
+		// 			if len(item.Members) == v {
+		// 				filteredData = append(filteredData, item)
+		// 			}
+		// 		}
+		// 	} else if len(memberSlice) == 0 && Location != "" {
+		// 		for _, location := range db.DB.Locations {
+		// 			if item.Id == location.Id {
+		// 				for _, place := range location.Location {
+		// 					if Location == place {
+		// 						filteredData = append(filteredData, item)
+		// 					}
+		// 				}
+		// 			}
+		// 		}
+		// 	} else {
+		// 		for _, v := range memberSlice {
+		// 			if len(item.Members) == v {
+		// 				for _, location := range db.DB.Locations {
+		// 					if item.Id == location.Id {
+		// 						for _, place := range location.Location {
+		// 							if Location == place {
+		// 								filteredData = append(filteredData, item)
+		// 							}
+		// 						}
+
+		// 					}
+		// 				}
+		// 			}
+		// 		}
+		// 	}
 	}
-	fmt.Println(filteredData)
+	// fmt.Println(filteredData)
 	md := prepareData(filteredData)
 
 	t, err := template.ParseFiles("src/html/main-page/index.html", "src/html/main-page/card.html")
