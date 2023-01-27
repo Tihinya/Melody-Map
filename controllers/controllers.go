@@ -131,8 +131,18 @@ func Filter(w http.ResponseWriter, r *http.Request) {
 	CdInputEnd := r.FormValue("creation-data-to")
 	FaInputStart := r.FormValue("first-album-from")
 	FaInputEnd := r.FormValue("first-album-to")
-	// Checkbox := r.Form["num-members"]
-	// Location := r.FormValue("location")
+
+	var memberSlice []int
+
+	numMembersValue := r.Form["num-members"]
+	for _, numMembers := range numMembersValue {
+		numMembersInt, err := strconv.Atoi(numMembers)
+		if err == nil {
+			memberSlice = append(memberSlice, numMembersInt)
+		}
+	}
+
+	Location := r.FormValue("location")
 
 	data := db.DB.GetArtists()
 
@@ -156,7 +166,6 @@ func Filter(w http.ResponseWriter, r *http.Request) {
 		a, _ := time.Parse("02-01-2006", item.FirstAlbum)
 
 		year := a.Year()
-		fmt.Println(year)
 
 		if item.CreationDate < startDate || item.CreationDate > endDate {
 			continue
@@ -164,10 +173,42 @@ func Filter(w http.ResponseWriter, r *http.Request) {
 		if year < startAlbumDate || year > endAlbumDate {
 			continue
 		}
+		if len(memberSlice) == 0 && Location == "" {
+			continue
+		} else if len(memberSlice) != 0 && Location == "" {
+			for _, v := range memberSlice {
+				if len(item.Members) == v {
+					filteredData = append(filteredData, item)
+				}
+			}
+		} else if len(memberSlice) == 0 && Location != "" {
+			for _, location := range db.DB.Locations {
+				if item.Id == location.Id {
+					for _, place := range location.Location {
+						if Location == place {
+							filteredData = append(filteredData, item)
+						}
+					}
+				}
+			}
+		} else {
+			for _, v := range memberSlice {
+				if len(item.Members) == v {
+					for _, location := range db.DB.Locations {
+						if item.Id == location.Id {
+							for _, place := range location.Location {
+								if Location == place {
+									filteredData = append(filteredData, item)
+								}
+							}
 
-		filteredData = append(filteredData, item)
+						}
+					}
+				}
+			}
+		}
 	}
-
+	fmt.Println(filteredData)
 	md := prepareData(filteredData)
 
 	t, err := template.ParseFiles("src/html/main-page/index.html", "src/html/main-page/card.html")
