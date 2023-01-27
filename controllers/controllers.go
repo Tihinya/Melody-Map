@@ -58,9 +58,15 @@ func prepareData(arr []db.Artist) *MainData {
 
 	sort.Ints(md.CountMembers)
 
-	locat := make(map[string]int)
+	locat := make(map[string]interface{})
 
 	locations := db.DB.GetLocations()
+
+	// for _, v := range locations {
+	// 	for _, v1 := range v.Location {
+	// 		locat[v1] = nil
+	// 	}
+	// }
 
 	for i := range md.Cards {
 		md.Cards[i].Location = locations[i].Location
@@ -68,7 +74,7 @@ func prepareData(arr []db.Artist) *MainData {
 		for _, a := range locations[i].Location {
 			loc = a
 		}
-		locat[loc] = i
+		locat[loc] = nil
 	}
 
 	for k := range locat {
