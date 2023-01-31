@@ -66,7 +66,7 @@ type apiData interface {
 	*indexDates | *indexLocations | *indexRelations | *artists
 }
 
-var DB database
+var DB *database
 
 func GetData[T apiData](url string, schema T) {
 	r, err := http.Get(url)
@@ -146,5 +146,5 @@ func initWithAPIdata() *database {
 }
 
 func init() {
-	DB = *initWithAPIdata()
+	DB = initWithAPIdata()
 }

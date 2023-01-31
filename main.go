@@ -1,20 +1,27 @@
 package main
 
 import (
-	"fmt"
 	"groupie-tracker/controllers"
+	"groupie-tracker/router"
 	"log"
 	"net/http"
 )
 
 func main() {
-	http.HandleFunc("/", controllers.MainPage)
-	http.HandleFunc("/full", controllers.FullInfo)
-	http.HandleFunc("/search", controllers.Search)
-	http.HandleFunc("/filter", controllers.Filter)
+	r := router.Router{}
+
+	r.NewRoute("GET", "/", controllers.MainPage)
+	r.NewRoute("GET", `/full/(?P<id>\d+)`, controllers.FullInfo)
+	r.NewRoute("GET", `/filter`, controllers.Filter)
+	r.NewRoute("GET", `/search`, controllers.Search)
+	r.NewRoute("GET", "/dateslocations/", controllers.DatesLocations) // API endpoint for fetching google maps data
+
+	http.HandleFunc("/", r.Serve)
 
 	http.Handle("/src/", http.StripPrefix("/src/", http.FileServer(http.Dir("./src/"))))
 
-	fmt.Println("Your server at: http://localhost:8080")
+	log.Println("Ctrl + Click on the link: http://localhost:8080")
+	log.Println("To stop the server press `Ctrl + C`")
+
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
