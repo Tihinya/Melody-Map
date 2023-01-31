@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>ascii-art-web</title>
+    <link id="fav" rel="shortcut icon" type="image/x-icon" href="src/assets/favicon.ico" />
+    <link rel="stylesheet" href="src/css/normalize.css">
+    <link rel="stylesheet" href="src/css/style.css">
+</head>
+
+<body>
+    <div class="header">
+        <form class="search-box" action="/search" method="GET">
+            <input list="search-input" class="input" placeholder="Search..." name="search-input">
+            <datalist id="search-input">
+                {{ range .Cards }}
+                <option value={{.GroupName}}>{{.GroupName}}</option>
+                {{ end }}
+            </datalist>
+        </form>
+        <div class="filter-button" id="change-filters"></div>
+    </div>
+    <form class="filter" id="filters" method="GET" action="filter">
+        <div class="filter__column">
+            <div class="component">
+                <div class="component__name">Creation Date</div>
+                <div class="grid-grid">
+                    <div id="output1">1950</div>
+                    <div class="range-slider">
+                        <input id="range-from-cd" type="range" min="1950" max="2022" value="1950" name="creation-data-from">
+                        <input id="range-to-cd" type="range" min="1950" max="2022" value="2022" name="creation-data-to">
+                    </div>
+                    <div id="output2">2022</div>
+                </div>
+            </div>
+            <div class="component">
+                <div class="component__name">First Album</div>
+                <div class="grid-grid">
+                    <div id="output3">1950</div>
+                    <div class="range-slider">
+                        <input id="range-from-fa" type="range" min="1950" max="2022" value="1950" name="first-album-from">
+                        <input id="range-to-fa" type="range" min="1950" max="2022" value="2022" name="first-album-to">
+                    </div>
+                    <div id="output4">2022</div>
+                </div>
+            </div>
+        </div>
+        <div class="submit-filter">
+            <input type="submit" value="APPLY">
+        </div>
+        <div class="filter__column ">
+            <div class="component">
+                <div class="component__name">Members</div>
+                <div class="checkbox">
+                    <input type="checkbox" name="num-members" value="1">
+                    <label for="num-members-1">1</label>
+                    <input type="checkbox" name="num-members" value="2">
+                    <label for="num-members-1">2</label>
+                    <input type="checkbox" name="num-members" value="3">
+                    <label for="num-members-1">3</label>
+                    <input type="checkbox"name="num-members" value="4">
+                    <label for="num-members-1">4</label>
+                    <input type="checkbox" name="num-members" value="5">
+                    <label for="num-members-1">5</label>
+                    <input type="checkbox" name="num-members" value="6">
+                    <label for="num-members-1">6</label>
+                    <input type="checkbox" name="num-members" value="7">
+                    <label for="num-members-1">7</label>
+                    <input type="checkbox" name="num-members" value="8">
+                    <label for="num-members-1">8</label>
+                </div>
+            </div>
+            <div class="component">
+                <div class="component__name">Locations</div>
+                <div class="location-select">
+                    <input placeholder="Locations" list="searchtype" class="selector-location" name="location">
+                    <datalist id="searchtype">
+                        {{ range .Locations}}
+                        <option value="{{.}}">{{.}}</option>
+                        {{end}}
+                    </datalist>
+                </div>
+            </div>
+        </div>
+    </form>
+    </div>
+    <div class="main-container">
+        {{ range .Cards }}
+        {{ template "card" . }}
+        {{ end }}
+        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" class="rick-style">
+            <div class="Rick-card">
+                <div class="card__header">Rick Astley</div>
+                <div class="card__main">
+                    <div class="main__picture" style="background-image: url(https://media.tenor.com/yheo1GGu3FwAAAAM/rick-roll-rick-ashley.gif);"></div>
+                    <div class="group">
+                        <div class="group__text">1966</div>
+                        <div class="group__text">Rick Astley</div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+    <script type="module" src="src/js/range.js"></script>
+</body>
+
+</html>

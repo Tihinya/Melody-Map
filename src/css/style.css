@@ -1,0 +1,238 @@
+:root {
+    --additionalColor: #6C6C6C;
+    --mainColor: #8F8F8F;
+    --pointHeight: 20px;
+    --headerHeight: 84px;
+}
+
+body {
+    background: var(--mainColor);
+}
+
+.header {
+    box-sizing: border-box;
+    display: flex;
+    width: 100%;
+    height: var(--headerHeight);
+
+    padding: 20px 120px;
+
+    background: var(--additionalColor);
+    z-index: 1;
+}
+
+.filter-button {
+    aspect-ratio: 328/201;
+    height: 100%;
+
+    color: aliceblue;
+
+    background: url("/src/assets/filter-button.svg");
+    background-size: cover;
+    cursor: pointer;
+}
+
+.main-container {
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 44px;
+    position: relative;
+    padding: 40px 120px;
+    background: var(--mainColor);
+
+    z-index: 2;
+}
+
+.card {
+    box-sizing: border-box;
+    width: 100%;
+    cursor: pointer;
+}
+
+.card__header {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 48px;
+    padding: 10px;
+    font-size: 24px;
+    color: #fff;
+    background: #350505;
+}
+
+.card__main {
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    height: 360px;
+}
+
+@media only screen and (max-width: 1400px) {
+    .main-container {
+        grid-template-columns: 1fr 1fr;
+        padding: 20px 60px;
+    }
+}
+
+@media only screen and (max-width: 900px) {
+    .main-container {
+        grid-template-columns: 1fr;
+        padding: 20px 20px;
+    }
+}
+
+.main__picture {
+    box-sizing: border-box;
+    width: 100%;
+    display: grid;
+    background-size: cover;
+    background-position: center;
+}
+
+.group {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #515151;
+}
+
+.group__text {
+    text-align: center;
+    padding: 8px 12px;
+    font-size: 20px;
+    color: #fff;
+}
+
+.rick-style {
+    text-decoration: none;
+}
+
+.search-box {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 100%;
+    width: 100%;
+}
+
+.input {
+    box-sizing: border-box;
+
+    padding: 8px 12px;
+    width: 30%;
+    height: 100%;
+    border-radius: 30px;
+    border: none;
+}
+
+.filter {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 0.2fr 1fr;
+
+    width: 100%;
+    max-height: 0px;
+
+    color: white;
+    background-color: rgb(37, 37, 37);
+
+    transition: max-height 500ms ease-in-out;
+}
+
+.filter__column {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+
+    padding: 40px 0;
+
+    width: 100%;
+}
+
+.submit-filter {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+
+    height: 100%;
+
+    padding: 40px 0;
+}
+
+.submit-filter input[type="submit"] {
+    width: 100%;
+    border-radius: 14px;
+
+    color: white;
+    font-size: 20px;
+    background: #6C6C6C;
+}
+
+.component {
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+}
+
+.component__name {
+    font-size: 46px;
+}
+
+.grid-grid {
+    display: grid;
+    grid-template-columns: 2fr 10fr 1fr;
+}
+
+.input-wrapper {
+    display: block;
+}
+
+.range-slider input[type=range] {
+    all: unset;
+    position: absolute;
+    border-radius: 14px;
+    background: #F1EFEF;
+    overflow: hidden;
+    width: 300px;
+    height: var(--pointHeight);
+}
+
+.range-slider input[type=range]::-webkit-slider-thumb {
+    aspect-ratio: 1/1;
+    pointer-events: all;
+    position: relative;
+    z-index: 1;
+    appearance: none;
+    height: var(--pointHeight);
+    border-radius: 50%;
+    background-color: #000;
+}
+
+.selector-location {
+    padding: 8px 12px;
+    border-radius: 30px;
+    border: none;
+}
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    font-size: 24px;
+}
+
+.checkbox input {
+    aspect-ratio: 1/1;
+    height: 18px;
+}
