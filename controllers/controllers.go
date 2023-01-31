@@ -4,13 +4,17 @@ import (
 	"encoding/json"
 	"fmt"
 	"groupie-tracker/db"
+	"groupie-tracker/router"
 	"html/template"
+	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 )
 
 type Card struct {
+	Id           int
 	Image        string
 	GroupName    string
 	CreationDate int
@@ -44,6 +48,7 @@ func MainPage(w http.ResponseWriter, r *http.Request) {
 
 	for _, artist := range db.DB.GetArtists() {
 		card := Card{
+			Id:           artist.Id,
 			Image:        artist.Image,
 			GroupName:    artist.Name,
 			CreationDate: artist.CreationDate,
@@ -61,17 +66,20 @@ func MainPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func FullInfo(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
+	sid := router.GetField(r, "id")
 
-	id := 1
+	id, err := strconv.Atoi(sid)
+	if err != nil {
+		fmt.Println(http.StatusInternalServerError, err)
+	}
 
 	md := Info{
 		Card:          Card{},
 		LocationDates: map[string][]string{},
 	}
 
-	for i, artist := range db.DB.GetArtists() {
-		if i == id {
+	for _, artist := range db.DB.GetArtists() {
+		if artist.Id == id {
 			card := Card{
 				Image:        artist.Image,
 				GroupName:    artist.Name,
@@ -80,6 +88,7 @@ func FullInfo(w http.ResponseWriter, r *http.Request) {
 			}
 
 			md.Card = card
+			break
 		}
 	}
 
@@ -126,7 +135,10 @@ func DatesLocations(w http.ResponseWriter, r *http.Request) {
 			addr := strings.Replace(loc, "_", "+", -1)
 
 			req := fmt.Sprintf("https://maps.googleapis.com/maps/api/geocode/json?address=%v&key=%v", addr, k)
-			res, _ := http.Get(req)
+			res, err := http.Get(req)
+			if err != nil {
+				log.Println(err)
+			}
 
 			lat, lng := db.GetGoogleMap(res)
 

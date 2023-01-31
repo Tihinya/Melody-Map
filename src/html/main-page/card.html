@@ -1,16 +1,21 @@
 {{ define "card" }}
 
 <div class="card">
+  <a href="/full/{{ .Id }}">
     <div class="card__header">{{.GroupName}}</div>
     <div class="card__main">
-        <div class="main__picture" style="background-image:url({{.Image}});"></div>
-        <div class="group">
-            <div class="group__text">{{.CreationDate}}</div>
-            {{ range .Members}}
-                <div class="group__text">{{.}}</div>
-            {{end}}
-        </div>
+      <div
+        class="main__picture"
+        style="background-image:url({{.Image}});"
+      ></div>
+      <div class="group">
+        <div class="group__text">{{.CreationDate}}</div>
+        {{ range .Members}}
+        <div class="group__text">{{.}}</div>
+        {{end}}
+      </div>
     </div>
+  </a>
 </div>
 
 {{ end }}
