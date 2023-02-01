@@ -11,17 +11,17 @@
 
 <body>
     <div class="header">
-        <form class="search-box" action="/search" method="GET">
+        <form class="search-box" name="f1" method="GET">
             <input list="search-input" class="input" placeholder="Search..." name="search-input">
             <datalist id="search-input">
                 {{ range .Cards }}
-                <option value={{.GroupName}}>{{.GroupName}}</option>
+                <option value={{.GroupName}} onclick="f1.action='/full/{{.Id}}'">{{.GroupName}}</option>
                 {{ end }}
             </datalist>
         </form>
         <div class="filter-button" id="change-filters"></div>
     </div>
-    <form class="filter" id="filters" method="GET" action="filter">
+    <form class="filter" id="filters" method="GET" action="/">
         <div class="filter__column">
             <div class="component">
                 <div class="component__name">Creation Date</div>

@@ -91,6 +91,59 @@ type Coordinate struct {
 	Lng float64 `json:"lng"`
 }
 
+type Filter struct {
+	CreationDateStart int
+	CreationDateEnd   int
+	AlbumDateStart    int
+	AlbumDateEnd      int
+	Members           []int
+	Location          string
+}
+
+func getFilters(r *http.Request) Filter {
+	r.ParseForm()
+
+	CdInputStart := r.FormValue("creation-data-from")
+	CdInputEnd := r.FormValue("creation-data-to")
+	FaInputStart := r.FormValue("first-album-from")
+	FaInputEnd := r.FormValue("first-album-to")
+
+	var Members []int
+
+	numMembersValue := r.Form["num-members"]
+	for _, numMembers := range numMembersValue {
+		numMembersInt, err := strconv.Atoi(numMembers)
+		if err == nil {
+			Members = append(Members, numMembersInt)
+		}
+	}
+
+	Location := r.FormValue("location")
+
+	CreationDateStart, _ := strconv.Atoi(CdInputStart)
+	CreationDateEnd, _ := strconv.Atoi(CdInputEnd)
+	//[len(FaInputStart)-4:]
+	AlbumDateStart, _ := strconv.Atoi(FaInputStart)
+	AlbumDateEnd, _ := strconv.Atoi(FaInputEnd)
+
+	if CreationDateStart > CreationDateEnd {
+		CreationDateStart, CreationDateEnd = CreationDateEnd, CreationDateStart
+	}
+
+	if AlbumDateStart > AlbumDateEnd {
+		AlbumDateStart, AlbumDateEnd = AlbumDateEnd, AlbumDateStart
+	}
+
+	return Filter{
+		CreationDateStart,
+		CreationDateEnd,
+		AlbumDateStart,
+		AlbumDateEnd,
+		Members,
+		Location,
+	}
+}
+
 func MainPage(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("src/html/main-page/index.html", "src/html/main-page/card.html")
 
@@ -98,7 +151,39 @@ func MainPage(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(http.StatusInternalServerError, err)
 	}
 
-	md := prepareData(db.DB.GetArtists())
+	var filteredData []db.Artist
+
+	filter := getFilters(r)
+
+	//fmt.Printf("min: %d, max: %d\n min album: %d, max album: %d\n", startDate, endDate, startAlbumDate, endAlbumDate)
+
+	b := db.DB.GetLocations()
+	data := db.DB.GetArtists()
+
+	for i, item := range data {
+		a, _ := time.Parse("02-01-2006", item.FirstAlbum)
+
+		year := a.Year()
+
+		if item.CreationDate < filter.CreationDateStart || item.CreationDate > filter.CreationDateEnd {
+			continue
+		}
+
+		if year < filter.AlbumDateStart || year > filter.AlbumDateEnd {
+			continue
+		}
+
+		if len(filter.Members) > 0 && !contains(filter.Members, len(item.Members)) {
+			continue
+		}
+
+		if filter.Location != "" && !contains(b[i].Location, filter.Location) {
+			continue
+		}
+		filteredData = append(filteredData, item)
+	}
+
+	md := prepareData(filteredData)
 
 	err = t.Execute(w, md)
 
@@ -155,16 +240,18 @@ func FullInfo(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func Search(w http.ResponseWriter, r *http.Request) {
-	groupName := r.FormValue("search-input")
+// func Search(w http.ResponseWriter, r *http.Request) {
+// 	groupName := r.FormValue("search-input")
 
-	if r.Method != "GET" {
-		fmt.Println(http.StatusBadRequest)
-		return
-	}
+// 	if r.Method != "GET" {
+// 		fmt.Println(http.StatusBadRequest)
+// 		return
+// 	}
 
-	fmt.Println(groupName)
-}
+// 	http.RedirectHandler("http://localhost:8080/full/2", http.StatusMovedPermanently)
+
+// 	fmt.Println(groupName)
+// }
 
 func contains[T string | int](arr []T, compare T) bool {
 	for _, v := range arr {
@@ -176,84 +263,84 @@ func contains[T string | int](arr []T, compare T) bool {
 	return false
 }
 
-func Filter(w http.ResponseWriter, r *http.Request) {
-	var filteredData []db.Artist
+// func Filter(w http.ResponseWriter, r *http.Request) {
+// 	var filteredData []db.Artist
 
-	r.ParseForm()
-	if r.Method != "GET" {
-		w.WriteHeader(http.StatusBadRequest)
-	}
-	CdInputStart := r.FormValue("creation-data-from")
-	CdInputEnd := r.FormValue("creation-data-to")
-	FaInputStart := r.FormValue("first-album-from")
-	FaInputEnd := r.FormValue("first-album-to")
+// 	r.ParseForm()
+// 	if r.Method != "GET" {
+// 		w.WriteHeader(http.StatusBadRequest)
+// 	}
+// 	CdInputStart := r.FormValue("creation-data-from")
+// 	CdInputEnd := r.FormValue("creation-data-to")
+// 	FaInputStart := r.FormValue("first-album-from")
+// 	FaInputEnd := r.FormValue("first-album-to")
 
-	var memberSlice []int
+// 	var memberSlice []int
 
-	numMembersValue := r.Form["num-members"]
-	for _, numMembers := range numMembersValue {
-		numMembersInt, err := strconv.Atoi(numMembers)
-		if err == nil {
-			memberSlice = append(memberSlice, numMembersInt)
-		}
-	}
+// 	numMembersValue := r.Form["num-members"]
+// 	for _, numMembers := range numMembersValue {
+// 		numMembersInt, err := strconv.Atoi(numMembers)
+// 		if err == nil {
+// 			memberSlice = append(memberSlice, numMembersInt)
+// 		}
+// 	}
 
-	locationInput := r.FormValue("location")
+// 	locationInput := r.FormValue("location")
 
-	data := db.DB.GetArtists()
+// 	data := db.DB.GetArtists()
 
-	startDate, _ := strconv.Atoi(CdInputStart)
-	endDate, _ := strconv.Atoi(CdInputEnd)
-	//[len(FaInputStart)-4:]
-	startAlbumDate, _ := strconv.Atoi(FaInputStart)
-	endAlbumDate, _ := strconv.Atoi(FaInputEnd)
+// 	startDate, _ := strconv.Atoi(CdInputStart)
+// 	endDate, _ := strconv.Atoi(CdInputEnd)
+// 	//[len(FaInputStart)-4:]
+// 	startAlbumDate, _ := strconv.Atoi(FaInputStart)
+// 	endAlbumDate, _ := strconv.Atoi(FaInputEnd)
 
-	if startDate > endDate {
-		startDate, endDate = endDate, startDate
-	}
+// 	if startDate > endDate {
+// 		startDate, endDate = endDate, startDate
+// 	}
 
-	if startAlbumDate > endAlbumDate {
-		startAlbumDate, endAlbumDate = endAlbumDate, startAlbumDate
-	}
+// 	if startAlbumDate > endAlbumDate {
+// 		startAlbumDate, endAlbumDate = endAlbumDate, startAlbumDate
+// 	}
 
-	//fmt.Printf("min: %d, max: %d\n min album: %d, max album: %d\n", startDate, endDate, startAlbumDate, endAlbumDate)
+// 	//fmt.Printf("min: %d, max: %d\n min album: %d, max album: %d\n", startDate, endDate, startAlbumDate, endAlbumDate)
 
-	b := db.DB.GetLocations()
+// 	b := db.DB.GetLocations()
 
-	for i, item := range data {
-		a, _ := time.Parse("02-01-2006", item.FirstAlbum)
+// 	for i, item := range data {
+// 		a, _ := time.Parse("02-01-2006", item.FirstAlbum)
 
-		year := a.Year()
+// 		year := a.Year()
 
-		if item.CreationDate < startDate || item.CreationDate > endDate {
-			continue
-		}
+// 		if item.CreationDate < startDate || item.CreationDate > endDate {
+// 			continue
+// 		}
 
-		if year < startAlbumDate || year > endAlbumDate {
-			continue
-		}
+// 		if year < startAlbumDate || year > endAlbumDate {
+// 			continue
+// 		}
 
-		if len(memberSlice) > 0 && !contains(memberSlice, len(item.Members)) {
-			continue
-		}
+// 		if len(memberSlice) > 0 && !contains(memberSlice, len(item.Members)) {
+// 			continue
+// 		}
 
-		if locationInput != "" && !contains(b[i].Location, locationInput) {
-			continue
-		}
-		filteredData = append(filteredData, item)
-	}
-	md := prepareData(filteredData)
+// 		if locationInput != "" && !contains(b[i].Location, locationInput) {
+// 			continue
+// 		}
+// 		filteredData = append(filteredData, item)
+// 	}
+// 	md := prepareData(filteredData)
 
-	t, err := template.ParseFiles("src/html/main-page/index.html", "src/html/main-page/card.html")
-	if err != nil {
-		fmt.Println(http.StatusInternalServerError, err)
-	}
+// 	t, err := template.ParseFiles("src/html/main-page/index.html", "src/html/main-page/card.html")
+// 	if err != nil {
+// 		fmt.Println(http.StatusInternalServerError, err)
+// 	}
 
-	err = t.Execute(w, md)
-	if err != nil {
-		fmt.Println(http.StatusInternalServerError, err)
-	}
-}
+// 	err = t.Execute(w, md)
+// 	if err != nil {
+// 		fmt.Println(http.StatusInternalServerError, err)
+// 	}
+// }
 
 func DatesLocations(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
