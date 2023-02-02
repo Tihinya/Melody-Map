@@ -6,7 +6,7 @@
     <link id="fav" rel="shortcut icon" type="image/x-icon" href="/src/assets/favicon.ico" />
     <link rel="stylesheet" href="/src/css/normalize.css">
     <link rel="stylesheet" href="/src/css/style.css">
-    <script type="text/javascript" src="/src/html/full-info/index.js"></script>
+    <script type="module">import { getParams} from "/src/js/index-full-info.js"; getParams({{ .Card.Id }})</script>
 </head>
 <body>
     <div class="fi-container">
@@ -30,10 +30,10 @@
                 {{ end }}
             </div>
             <div class="full-card__map" id="map"></div>
-            <script
+            {{/* <script
                 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&v=weekly"
                 defer
-            ></script>
+            ></script> */}}
         </div>
     </div>
 </body>
