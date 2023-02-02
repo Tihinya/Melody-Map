@@ -1,14 +1,10 @@
 package controllers
 
 import (
-	"encoding/json"
 	"fmt"
 	"groupie-tracker/db"
-	"groupie-tracker/router"
 	"html/template"
-	"log"
 	"net/http"
-	"os"
 	"sort"
 	"strconv"
 	"strings"
@@ -34,6 +30,9 @@ type MainData struct {
 	Cards        []Card
 	CountMembers []int
 	Locations    []string
+	Members      []string
+	CreationDate []string
+	FirstAlbum   []string
 }
 
 func prepareData(arr []db.Artist) *MainData {
@@ -45,7 +44,9 @@ func prepareData(arr []db.Artist) *MainData {
 
 	temp := make(map[int]int)
 
-	for _, artist := range arr {
+	locations := db.DB.GetLocations()
+	artist := db.DB.GetArtists()
+	for i, artist := range arr {
 		num := len(artist.Members)
 
 		temp[num] = 0
@@ -55,6 +56,7 @@ func prepareData(arr []db.Artist) *MainData {
 			FirstAlbum:   artist.FirstAlbum,
 			Image:        artist.Image,
 			GroupName:    artist.Name,
+			Location:     locations[i].Location,
 			CreationDate: artist.CreationDate,
 			Members:      artist.Members,
 		}
@@ -68,20 +70,42 @@ func prepareData(arr []db.Artist) *MainData {
 
 	sort.Ints(md.CountMembers)
 
-	locat := make(map[string]interface{})
+	uniqueLocations := make(map[string]interface{})
+	uniqueMembers := make(map[string]interface{})
+	uniqueDate := make(map[string]interface{})
+	uniqueFirstAlbum := make(map[string]interface{})
 
-	locations := db.DB.GetLocations()
-
+	//----------
 	for _, v := range locations {
 		for _, v1 := range v.Location {
-			locat[v1] = nil
+			uniqueLocations[v1] = nil
 		}
-
 	}
-
-	for k := range locat {
+	for k := range uniqueLocations {
 		md.Locations = append(md.Locations, k)
 	}
+	//----------
+	for _, v := range artist {
+		for _, v1 := range v.Members {
+			uniqueMembers[v1] = nil
+		}
+		uniqueDate[strconv.Itoa(v.CreationDate)] = nil
+
+		uniqueDate[v.FirstAlbum] = nil
+	}
+
+	for k := range uniqueMembers {
+		md.Members = append(md.Members, k)
+	}
+	for k := range uniqueDate {
+		md.CreationDate = append(md.CreationDate, k)
+	}
+	for k := range uniqueFirstAlbum {
+		md.FirstAlbum = append(md.FirstAlbum, k)
+	}
+	//----------
+
+	sort.Strings(md.Locations)
 
 	return md
 }
@@ -165,11 +189,13 @@ func MainPage(w http.ResponseWriter, r *http.Request) {
 
 		year := a.Year()
 
-		if item.CreationDate < filter.CreationDateStart || item.CreationDate > filter.CreationDateEnd {
+		if (filter.CreationDateStart != 0 || filter.CreationDateEnd != 0) &&
+			(item.CreationDate < filter.CreationDateStart || item.CreationDate > filter.CreationDateEnd) {
 			continue
 		}
 
-		if year < filter.AlbumDateStart || year > filter.AlbumDateEnd {
+		if (filter.AlbumDateStart != 0 || filter.AlbumDateEnd != 0) &&
+			(year < filter.AlbumDateStart || year > filter.AlbumDateEnd) {
 			continue
 		}
 
@@ -192,66 +218,44 @@ func MainPage(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func FullInfo(w http.ResponseWriter, r *http.Request) {
-	sid := router.GetField(r, "id")
+func Search(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	tmpl, _ := template.ParseFiles("src/html/main-page/index.html", "src/html/main-page/card.html")
+	locations := db.DB.GetLocations()
+	var filteredData []db.Artist
+	search := strings.ToLower(r.FormValue("search-input"))
 
-	id, err := strconv.Atoi(sid)
-	if err != nil {
-		fmt.Println(http.StatusInternalServerError, err)
-	}
-
-	md := Info{
-		Card:          Card{},
-		LocationDates: map[string][]string{},
-	}
-
-	for _, artist := range db.DB.GetArtists() {
-		if artist.Id == id {
-			card := Card{
-				Image:        artist.Image,
-				GroupName:    artist.Name,
-				CreationDate: artist.CreationDate,
-				Members:      artist.Members,
+	for b, artist := range db.DB.GetArtists() {
+		if strings.Contains(strings.ToLower(artist.Name), search) {
+			filteredData = append(filteredData, artist)
+			continue
+		}
+		if strings.Contains(strings.ToLower(strconv.Itoa(artist.CreationDate)), search) {
+			filteredData = append(filteredData, artist)
+			continue
+		}
+		if strings.Contains(strings.ToLower(artist.FirstAlbum), search) {
+			filteredData = append(filteredData, artist)
+			continue
+		}
+		for i := range artist.Members {
+			if strings.Contains(strings.ToLower(artist.Members[i]), search) {
+				filteredData = append(filteredData, artist)
+				continue
 			}
-
-			md.Card = card
-			break
+		}
+		for i := range locations[b].Location {
+			if strings.Contains(strings.ToLower(locations[b].Location[i]), search) {
+				filteredData = append(filteredData, artist)
+				continue
+			}
 		}
 	}
 
-	for _, dl := range db.DB.GetRelations() {
-		if dl.Id == id {
-			for k, v := range dl.DatesLocations {
-				md.LocationDates[k] = v
-			}
-		}
-	}
+	md := prepareData(filteredData)
 
-	t, err := template.ParseFiles("src/html/full-info/index.html")
-
-	if err != nil {
-		fmt.Println(http.StatusInternalServerError, err)
-	}
-
-	err = t.Execute(w, md)
-
-	if err != nil {
-		fmt.Println(http.StatusInternalServerError, err)
-	}
+	tmpl.Execute(w, md)
 }
-
-// func Search(w http.ResponseWriter, r *http.Request) {
-// 	groupName := r.FormValue("search-input")
-
-// 	if r.Method != "GET" {
-// 		fmt.Println(http.StatusBadRequest)
-// 		return
-// 	}
-
-// 	http.RedirectHandler("http://localhost:8080/full/2", http.StatusMovedPermanently)
-
-// 	fmt.Println(groupName)
-// }
 
 func contains[T string | int](arr []T, compare T) bool {
 	for _, v := range arr {
@@ -261,126 +265,4 @@ func contains[T string | int](arr []T, compare T) bool {
 	}
 
 	return false
-}
-
-// func Filter(w http.ResponseWriter, r *http.Request) {
-// 	var filteredData []db.Artist
-
-// 	r.ParseForm()
-// 	if r.Method != "GET" {
-// 		w.WriteHeader(http.StatusBadRequest)
-// 	}
-// 	CdInputStart := r.FormValue("creation-data-from")
-// 	CdInputEnd := r.FormValue("creation-data-to")
-// 	FaInputStart := r.FormValue("first-album-from")
-// 	FaInputEnd := r.FormValue("first-album-to")
-
-// 	var memberSlice []int
-
-// 	numMembersValue := r.Form["num-members"]
-// 	for _, numMembers := range numMembersValue {
-// 		numMembersInt, err := strconv.Atoi(numMembers)
-// 		if err == nil {
-// 			memberSlice = append(memberSlice, numMembersInt)
-// 		}
-// 	}
-
-// 	locationInput := r.FormValue("location")
-
-// 	data := db.DB.GetArtists()
-
-// 	startDate, _ := strconv.Atoi(CdInputStart)
-// 	endDate, _ := strconv.Atoi(CdInputEnd)
-// 	//[len(FaInputStart)-4:]
-// 	startAlbumDate, _ := strconv.Atoi(FaInputStart)
-// 	endAlbumDate, _ := strconv.Atoi(FaInputEnd)
-
-// 	if startDate > endDate {
-// 		startDate, endDate = endDate, startDate
-// 	}
-
-// 	if startAlbumDate > endAlbumDate {
-// 		startAlbumDate, endAlbumDate = endAlbumDate, startAlbumDate
-// 	}
-
-// 	//fmt.Printf("min: %d, max: %d\n min album: %d, max album: %d\n", startDate, endDate, startAlbumDate, endAlbumDate)
-
-// 	b := db.DB.GetLocations()
-
-// 	for i, item := range data {
-// 		a, _ := time.Parse("02-01-2006", item.FirstAlbum)
-
-// 		year := a.Year()
-
-// 		if item.CreationDate < startDate || item.CreationDate > endDate {
-// 			continue
-// 		}
-
-// 		if year < startAlbumDate || year > endAlbumDate {
-// 			continue
-// 		}
-
-// 		if len(memberSlice) > 0 && !contains(memberSlice, len(item.Members)) {
-// 			continue
-// 		}
-
-// 		if locationInput != "" && !contains(b[i].Location, locationInput) {
-// 			continue
-// 		}
-// 		filteredData = append(filteredData, item)
-// 	}
-// 	md := prepareData(filteredData)
-
-// 	t, err := template.ParseFiles("src/html/main-page/index.html", "src/html/main-page/card.html")
-// 	if err != nil {
-// 		fmt.Println(http.StatusInternalServerError, err)
-// 	}
-
-// 	err = t.Execute(w, md)
-// 	if err != nil {
-// 		fmt.Println(http.StatusInternalServerError, err)
-// 	}
-// }
-
-func DatesLocations(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-
-	k := os.Getenv("GOOGLE_API_KEY")
-
-	id := 1
-
-	var coordinates []Coordinate
-
-	if k == "" {
-		return
-	}
-
-	for _, dl := range db.DB.GetRelations() {
-		if dl.Id != id {
-			continue
-		}
-
-		for loc := range dl.DatesLocations {
-			addr := strings.Replace(loc, "_", "+", -1)
-
-			req := fmt.Sprintf("https://maps.googleapis.com/maps/api/geocode/json?address=%v&key=%v", addr, k)
-			res, err := http.Get(req)
-			if err != nil {
-				log.Println(err)
-			}
-
-			lat, lng := db.GetGoogleMap(res)
-
-			ll := Coordinate{
-				Lat: lat,
-				Lng: lng,
-			}
-
-			coordinates = append(coordinates, ll)
-		}
-
-		break
-	}
-
-	json.NewEncoder(w).Encode(coordinates)
 }

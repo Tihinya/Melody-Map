@@ -11,11 +11,24 @@
 
 <body>
     <div class="header">
-        <form class="search-box" name="f1" method="GET">
+        <form class="search-box" action="/search" method="GET">
             <input list="search-input" class="input" placeholder="Search..." name="search-input">
             <datalist id="search-input">
                 {{ range .Cards }}
-                <option value={{.GroupName}} onclick="f1.action='/full/{{.Id}}'">{{.GroupName}}</option>
+                <option value={{.GroupName}}>{{.GroupName}} - artist name</option>
+                {{end}}
+                {{ range .FirstAlbum }}
+                <option value={{.}}>{{.}} - first album</option>
+                {{end}}
+                {{ range .CreationDate }}
+                <option value={{.}}>{{.}} - creation data</option>
+                {{end}}
+                {{ range .Members }}
+                <option value={{.}}>{{.}} - member</option>
+                {{end}}
+
+                {{range .Locations}}
+                <option value={{.}}> {{.}}- location</option>
                 {{ end }}
             </datalist>
         </form>
