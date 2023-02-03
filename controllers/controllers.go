@@ -214,7 +214,6 @@ func MainPage(w http.ResponseWriter, r *http.Request) {
 	err = t.Execute(w, md)
 
 	if err != nil {
-		fmt.Println(http.StatusInternalServerError, err)
 	}
 }
 
