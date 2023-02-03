@@ -25,6 +25,7 @@ func FullInfo(w http.ResponseWriter, r *http.Request) {
 	for _, artist := range db.DB.GetArtists() {
 		if artist.Id == id {
 			card := Card{
+				Id:           artist.Id,
 				Image:        artist.Image,
 				GroupName:    artist.Name,
 				CreationDate: artist.CreationDate,

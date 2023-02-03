@@ -7,15 +7,20 @@
     <link id="fav" rel="shortcut icon" type="image/x-icon" href="src/assets/favicon.ico" />
     <link rel="stylesheet" href="src/css/normalize.css">
     <link rel="stylesheet" href="src/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rozha+One&display=swap" rel="stylesheet">
 </head>
 
 <body>
     <div class="header">
+    <a href="/" class="main-page-href">GT52</a>
         <form class="search-box" action="/search" method="GET">
             <input list="search-input" class="input" placeholder="Search..." name="search-input">
             <datalist id="search-input">
-                {{ range .Cards }}
-                <option value={{.GroupName}}>{{.GroupName}} - artist name</option>
+                {{ range .GroupNames }}
+                <option value={{.}}>{{.}} - artist name</option>
                 {{end}}
                 {{ range .FirstAlbum }}
                 <option value={{.}}>{{.}} - first album</option>
@@ -28,7 +33,7 @@
                 {{end}}
 
                 {{range .Locations}}
-                <option value={{.}}> {{.}}- location</option>
+                <option value={{.}}>{{.}} - location</option>
                 {{ end }}
             </datalist>
         </form>
@@ -110,6 +115,10 @@
                     <div class="group">
                         <div class="group__text">1966</div>
                         <div class="group__text">Rick Astley</div>
+                        <div class="group__text">Andrei машина(быстрая)</div>
+                        <div class="group__text">Deniss xD</div>
+                        <div class="group__text">Denis jr. :)</div>
+                        <div class="group__text">Stepan</div>
                     </div>
                 </div>
             </div>

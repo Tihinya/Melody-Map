@@ -4,9 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"groupie-tracker/db"
+	"groupie-tracker/router"
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -15,7 +17,12 @@ func DatesLocations(w http.ResponseWriter, r *http.Request) {
 
 	k := os.Getenv("GOOGLE_API_KEY")
 
-	id := 1
+	sid := router.GetField(r, "id")
+
+	id, err := strconv.Atoi(sid)
+	if err != nil {
+		fmt.Println(http.StatusInternalServerError, err)
+	}
 
 	var coordinates []Coordinate
 
@@ -38,7 +45,11 @@ func DatesLocations(w http.ResponseWriter, r *http.Request) {
 				log.Println(err)
 			}
 
-			lat, lng := db.GetGoogleMap(res)
+			lat, lng, err := db.GetGoogleMap(res)
+			if err != nil {
+				log.Println(err)
+				continue
+			}
 
 			ll := Coordinate{
 				Lat: lat,

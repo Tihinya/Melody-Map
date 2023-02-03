@@ -29,10 +29,11 @@ type Info struct {
 type MainData struct {
 	Cards        []Card
 	CountMembers []int
-	Locations    []string
-	Members      []string
-	CreationDate []string
+	GroupNames   []string
+	CreationDate []int
 	FirstAlbum   []string
+	Members      []string
+	Locations    []string
 }
 
 func prepareData(arr []db.Artist) *MainData {
@@ -45,8 +46,7 @@ func prepareData(arr []db.Artist) *MainData {
 	temp := make(map[int]int)
 
 	locations := db.DB.GetLocations()
-	artist := db.DB.GetArtists()
-	for i, artist := range arr {
+	for _, artist := range arr {
 		num := len(artist.Members)
 
 		temp[num] = 0
@@ -56,7 +56,7 @@ func prepareData(arr []db.Artist) *MainData {
 			FirstAlbum:   artist.FirstAlbum,
 			Image:        artist.Image,
 			GroupName:    artist.Name,
-			Location:     locations[i].Location,
+			Location:     locations[artist.Id-1].Location,
 			CreationDate: artist.CreationDate,
 			Members:      artist.Members,
 		}
@@ -72,7 +72,7 @@ func prepareData(arr []db.Artist) *MainData {
 
 	uniqueLocations := make(map[string]interface{})
 	uniqueMembers := make(map[string]interface{})
-	uniqueDate := make(map[string]interface{})
+	uniqueDate := make(map[int]interface{})
 	uniqueFirstAlbum := make(map[string]interface{})
 
 	//----------
@@ -85,13 +85,14 @@ func prepareData(arr []db.Artist) *MainData {
 		md.Locations = append(md.Locations, k)
 	}
 	//----------
+	artist := db.DB.GetArtists()
 	for _, v := range artist {
 		for _, v1 := range v.Members {
 			uniqueMembers[v1] = nil
 		}
-		uniqueDate[strconv.Itoa(v.CreationDate)] = nil
-
-		uniqueDate[v.FirstAlbum] = nil
+		uniqueDate[v.CreationDate] = nil
+		md.GroupNames = append(md.GroupNames, v.Name)
+		uniqueFirstAlbum[v.FirstAlbum] = nil
 	}
 
 	for k := range uniqueMembers {
@@ -168,7 +169,19 @@ func getFilters(r *http.Request) Filter {
 	}
 }
 
+// TODO:
+// 0. logo --> home page
+// 1. fix fonts
+// 2. show creation date in header
+// 3. error handling with Rick Ashley
+// 4. 404 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+// 5. show first album in full page
+
 func MainPage(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/" {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
 	t, err := template.ParseFiles("src/html/main-page/index.html", "src/html/main-page/card.html")
 
 	if err != nil {
@@ -217,6 +230,16 @@ func MainPage(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func foo(arr []string, s string) bool {
+	for _, v := range arr {
+		if strings.Contains(strings.ToLower(v), s) {
+			return true
+		}
+	}
+
+	return false
+}
+
 func Search(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	tmpl, _ := template.ParseFiles("src/html/main-page/index.html", "src/html/main-page/card.html")
@@ -227,27 +250,14 @@ func Search(w http.ResponseWriter, r *http.Request) {
 	for b, artist := range db.DB.GetArtists() {
 		if strings.Contains(strings.ToLower(artist.Name), search) {
 			filteredData = append(filteredData, artist)
-			continue
-		}
-		if strings.Contains(strings.ToLower(strconv.Itoa(artist.CreationDate)), search) {
+		} else if strings.Contains(strings.ToLower(strconv.Itoa(artist.CreationDate)), search) {
 			filteredData = append(filteredData, artist)
-			continue
-		}
-		if strings.Contains(strings.ToLower(artist.FirstAlbum), search) {
+		} else if strings.Contains(strings.ToLower(artist.FirstAlbum), search) {
 			filteredData = append(filteredData, artist)
-			continue
-		}
-		for i := range artist.Members {
-			if strings.Contains(strings.ToLower(artist.Members[i]), search) {
-				filteredData = append(filteredData, artist)
-				continue
-			}
-		}
-		for i := range locations[b].Location {
-			if strings.Contains(strings.ToLower(locations[b].Location[i]), search) {
-				filteredData = append(filteredData, artist)
-				continue
-			}
+		} else if foo(artist.Members, search) {
+			filteredData = append(filteredData, artist)
+		} else if foo(locations[b].Location, search) {
+			filteredData = append(filteredData, artist)
 		}
 	}
 

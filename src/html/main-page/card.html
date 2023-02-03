@@ -9,7 +9,8 @@
         style="background-image:url({{.Image}});"
       ></div>
       <div class="group">
-        <div class="group__text">{{.CreationDate}}</div>
+        <div class="group__text">{{ .CreationDate }}</div>
+        <div class="group__text">{{ .FirstAlbum }}</div>
         {{ range .Members}}
         <div class="group__text">{{.}}</div>
         {{end}}

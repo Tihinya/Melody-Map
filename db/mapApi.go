@@ -2,6 +2,7 @@ package db
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -18,22 +19,25 @@ type googleMap struct {
 	} `json:"results"`
 }
 
-func GetGoogleMap(r *http.Response) (lat float64, lng float64) {
+func GetGoogleMap(r *http.Response) (lat float64, lng float64, err error) {
 	body, err := io.ReadAll(r.Body)
-
-	var gm googleMap
-
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return
 	}
 
+	var gm googleMap
 	err = json.Unmarshal(body, &gm)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return
 	}
 
+	if len(gm.Results) < 1 {
+		return 0, 0, fmt.Errorf("cannot get latitude, longtitude")
+	}
 	loc := gm.Results[0].Geometry.Location
 
-	return loc.Lat, loc.Lng
+	return loc.Lat, loc.Lng, err
 }
