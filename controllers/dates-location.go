@@ -45,7 +45,11 @@ func DatesLocations(w http.ResponseWriter, r *http.Request) {
 				log.Println(err)
 			}
 
-			lat, lng := db.GetGoogleMap(res)
+			lat, lng, err := db.GetGoogleMap(res)
+			if err != nil {
+				log.Println(err)
+				continue
+			}
 
 			ll := Coordinate{
 				Lat: lat,

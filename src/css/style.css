@@ -23,6 +23,17 @@ body {
     z-index: 1;
 }
 
+.main-page-href {
+    display: flex;
+    box-sizing: border-box;
+    text-decoration: none;
+    color: black;
+    text-align: center;
+    justify-content: center;
+    font-size: 50px;
+    font-family: 'DM Serif Display', serif;
+}
+
 .filter-button {
     aspect-ratio: 328/201;
     height: 100%;
@@ -46,10 +57,23 @@ body {
     z-index: 2;
 }
 
+.main-container-rick {
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 44px;
+    position: relative;
+    padding: 40px 120px;
+    background: var(--mainColor);
+
+    z-index: 2
+}
+
 .card {
     box-sizing: border-box;
     width: 100%;
     cursor: pointer;
+    font-family: ;
 }
 
 .card__header {
@@ -62,6 +86,7 @@ body {
     font-size: 24px;
     color: #fff;
     background: #350505;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 }
 
 .card__main {
@@ -105,8 +130,10 @@ body {
 .group__text {
     text-align: center;
     padding: 8px 12px;
-    font-size: 20px;
+    font-size: 16px;
     color: #fff;
+    font-family: 'Rozha One', serif;
+
 }
 
 .fi-container {
@@ -161,6 +188,8 @@ body {
 .full-card__info-text {
     text-align: center;
 
+    font-family: 'Rozha One', serif;
+
     padding: 8px 12px;
 
     font-size: 20px;
@@ -207,6 +236,8 @@ body {
 
 .record-ld__info_size-l {
     font-size: 20px;
+    font-family: 'Rozha One', serif;
+
     background-color: #D9D9D9;
 
 }
@@ -219,6 +250,7 @@ body {
 
 .rick-style {
     text-decoration: none;
+    width: 50%;
 }
 
 .search-box {
