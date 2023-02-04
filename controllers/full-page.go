@@ -8,6 +8,11 @@ import (
 	"strconv"
 )
 
+type Info struct {
+	Card          Card
+	LocationDates map[string][]string
+}
+
 func FullInfo(w http.ResponseWriter, r *http.Request) {
 	sid := router.GetField(r, "id")
 
@@ -30,6 +35,7 @@ func FullInfo(w http.ResponseWriter, r *http.Request) {
 				Image:        artist.Image,
 				GroupName:    artist.Name,
 				CreationDate: artist.CreationDate,
+				FirstAlbum:   artist.FirstAlbum,
 				Members:      artist.Members,
 			}
 

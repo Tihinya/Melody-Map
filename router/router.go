@@ -14,7 +14,6 @@ type route struct {
 
 type Router struct {
 	routes []route
-	// defaultR http.HandlerFunc
 }
 
 // regexp example -> https://regex101.com/r/84S9iL/1
@@ -27,10 +26,6 @@ func (router *Router) NewRoute(method, regexpString string, handler http.Handler
 		handler,
 	})
 }
-
-// func (router *Router) NewDefault(handler http.HandlerFunc) {
-// 	router.defaultR = handler
-// }
 
 func (router *Router) Serve(w http.ResponseWriter, r *http.Request) {
 	for _, v := range router.routes {
@@ -56,8 +51,6 @@ func (router *Router) Serve(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-
-	// router.defaultR(w, r)
 }
 
 func GetField(r *http.Request, name string) string {

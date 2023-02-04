@@ -23,7 +23,7 @@ body {
     z-index: 1;
 }
 
-.main-page-href {
+.header__logo {
     display: flex;
     box-sizing: border-box;
     text-decoration: none;

@@ -12,6 +12,11 @@ import (
 	"strings"
 )
 
+type Coordinate struct {
+	Lat float64 `json:"lat"`
+	Lng float64 `json:"lng"`
+}
+
 func DatesLocations(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
