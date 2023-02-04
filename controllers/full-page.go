@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"fmt"
 	"groupie-tracker/db"
+	"groupie-tracker/errorsSafe"
 	"groupie-tracker/router"
 	"html/template"
 	"net/http"
@@ -13,8 +13,10 @@ func FullInfo(w http.ResponseWriter, r *http.Request) {
 	sid := router.GetField(r, "id")
 
 	id, err := strconv.Atoi(sid)
+
 	if err != nil {
-		fmt.Println(http.StatusInternalServerError, err)
+		errorsSafe.WrapError(err, errorsSafe.ErrServer)
+		return
 	}
 
 	md := Info{
@@ -48,12 +50,14 @@ func FullInfo(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("src/html/full-info/index.html")
 
 	if err != nil {
-		fmt.Println(http.StatusInternalServerError, err)
+		errorsSafe.WrapError(err, errorsSafe.ErrServer)
+		return
 	}
 
 	err = t.Execute(w, md)
 
 	if err != nil {
-		fmt.Println(http.StatusInternalServerError, err)
+		errorsSafe.WrapError(err, errorsSafe.ErrServer)
+		return
 	}
 }

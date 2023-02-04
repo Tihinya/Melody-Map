@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"fmt"
 	"groupie-tracker/db"
+	"groupie-tracker/errorsSafe"
 	"html/template"
 	"net/http"
 	"sort"
@@ -178,14 +178,11 @@ func getFilters(r *http.Request) Filter {
 // 5. show first album in full page
 
 func MainPage(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/" {
-		w.WriteHeader(http.StatusNotFound)
-		return
-	}
 	t, err := template.ParseFiles("src/html/main-page/index.html", "src/html/main-page/card.html")
 
 	if err != nil {
-		fmt.Println(http.StatusInternalServerError, err)
+		errorsSafe.WrapError(err, errorsSafe.ErrServer)
+		return
 	}
 
 	var filteredData []db.Artist
@@ -227,7 +224,8 @@ func MainPage(w http.ResponseWriter, r *http.Request) {
 	err = t.Execute(w, md)
 
 	if err != nil {
-		fmt.Println(http.StatusInternalServerError, err)
+		errorsSafe.WrapError(err, errorsSafe.ErrNotAllowed)
+		return
 	}
 }
 

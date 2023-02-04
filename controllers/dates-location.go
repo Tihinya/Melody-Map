@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"groupie-tracker/db"
+	"groupie-tracker/errorsSafe"
 	"groupie-tracker/router"
 	"log"
 	"net/http"
@@ -20,8 +21,10 @@ func DatesLocations(w http.ResponseWriter, r *http.Request) {
 	sid := router.GetField(r, "id")
 
 	id, err := strconv.Atoi(sid)
+
 	if err != nil {
-		fmt.Println(http.StatusInternalServerError, err)
+		errorsSafe.WrapError(err, errorsSafe.ErrServer)
+		return
 	}
 
 	var coordinates []Coordinate
