@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"groupie-tracker/db"
-	"groupie-tracker/errorsSafe"
 	"html/template"
 	"net/http"
 	"sort"
@@ -181,7 +180,7 @@ func MainPage(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("src/html/main-page/index.html", "src/html/main-page/card.html")
 
 	if err != nil {
-		errorsSafe.WrapError(err, errorsSafe.ErrServer)
+		http.Error(w, "Something went wrong. We are working on that", http.StatusInternalServerError)
 		return
 	}
 
@@ -224,7 +223,7 @@ func MainPage(w http.ResponseWriter, r *http.Request) {
 	err = t.Execute(w, md)
 
 	if err != nil {
-		errorsSafe.WrapError(err, errorsSafe.ErrNotAllowed)
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 }

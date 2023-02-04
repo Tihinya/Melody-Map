@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"groupie-tracker/db"
-	"groupie-tracker/errorsSafe"
 	"groupie-tracker/router"
 	"log"
 	"net/http"
@@ -23,7 +22,7 @@ func DatesLocations(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(sid)
 
 	if err != nil {
-		errorsSafe.WrapError(err, errorsSafe.ErrServer)
+		http.Error(w, "Something went wrong. We are working on that", http.StatusInternalServerError)
 		return
 	}
 

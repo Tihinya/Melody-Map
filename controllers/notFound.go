@@ -1,23 +1,22 @@
 package controllers
 
 import (
-	"groupie-tracker/errorsSafe"
 	"html/template"
 	"net/http"
 )
 
 func NotFound(w http.ResponseWriter, r *http.Request) {
-	t, err := template.ParseFiles("src/html/404/index.html")
+	t, err := template.ParseFiles("src/html/404/indexs.html")
 
 	if err != nil {
-		errorsSafe.WrapError(err, errorsSafe.ErrServer)
+		http.Error(w, "Something went wrong. We are working on that", http.StatusInternalServerError)
 		return
 	}
 
 	err = t.Execute(w, nil)
 
 	if err != nil {
-		errorsSafe.WrapError(err, errorsSafe.ErrServer)
+		http.Error(w, "Something went wrong. We are working on that", http.StatusInternalServerError)
 		return
 	}
 }

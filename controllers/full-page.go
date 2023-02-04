@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"groupie-tracker/db"
-	"groupie-tracker/errorsSafe"
 	"groupie-tracker/router"
 	"html/template"
 	"net/http"
@@ -15,7 +14,7 @@ func FullInfo(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(sid)
 
 	if err != nil {
-		errorsSafe.WrapError(err, errorsSafe.ErrServer)
+		http.Error(w, "Something went wrong. We are working on that", http.StatusInternalServerError)
 		return
 	}
 
@@ -50,14 +49,14 @@ func FullInfo(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("src/html/full-info/index.html")
 
 	if err != nil {
-		errorsSafe.WrapError(err, errorsSafe.ErrServer)
+		http.Error(w, "Something went wrong. We are working on that", http.StatusInternalServerError)
 		return
 	}
 
 	err = t.Execute(w, md)
 
 	if err != nil {
-		errorsSafe.WrapError(err, errorsSafe.ErrServer)
+		http.Error(w, "Something went wrong. We are working on that", http.StatusInternalServerError)
 		return
 	}
 }
