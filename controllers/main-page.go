@@ -29,14 +29,6 @@ type MainData struct {
 	Locations    []string
 }
 
-// TODO:
-// 0. logo --> home page 				+
-// 1. fix fonts
-// 2. show creation date in header
-// 3. error handling with Rick Ashley
-// 4. 404 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-// 5. show first album in full page
-
 func prepareFilters(md *MainData, temp map[int]interface{}) {
 	locations := db.DB.GetLocations()
 
