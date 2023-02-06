@@ -95,6 +95,8 @@ func (db *database) GetArtists() artists {
 		return db.Artists
 	}
 
+	log.Fatal("data is missing")
+
 	return nil
 }
 
@@ -103,12 +105,17 @@ func (db *database) GetLocations() locations {
 		return db.Locations
 	}
 
+	log.Fatal("data is missing")
+
 	return nil
 }
 func (db *database) GetRelations() relations {
 	if db.Relations != nil {
 		return db.Relations
 	}
+
+	log.Fatal("data is missing")
+
 	return nil
 }
 func (db *database) GetDates() dates {
@@ -116,12 +123,10 @@ func (db *database) GetDates() dates {
 		return db.Dates
 	}
 
+	log.Fatal("data is missing")
+
 	return nil
 }
-
-func (db *database) GetAllRecords() {}
-
-func (db *database) GetArtistById() {}
 
 // initializes db with API data
 func initWithAPIdata() *database {

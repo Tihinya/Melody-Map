@@ -6,16 +6,22 @@
     <link id="fav" rel="shortcut icon" type="image/x-icon" href="/src/assets/favicon.ico" />
     <link rel="stylesheet" href="/src/css/normalize.css">
     <link rel="stylesheet" href="/src/css/style.css">
-    <script type="text/javascript" src="/src/html/full-info/index.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rozha+One&display=swap" rel="stylesheet">
+    <script type="module">import { getParams, centerLocation } from "/src/js/index-full-info.js"; getParams({{ .Card.Id }})</script>
 </head>
 <body>
+    <div class="header">
+        <a href="/" class="header__logo">GT52</a>
+    </div>
     <div class="fi-container">
         <div class="full-card">
             <div class="full-card__header">{{ .Card.GroupName }}</div>
             <div class="full-card__body">
                 <img class="full-card__picture" src={{ .Card.Image }}></img>
                 <div class="full-card__info">
-                    <div class="full-card__info-text full-card__info-text_size-l">{{ .Card.CreationDate }}</div>
+                    <div class="full-card__info-text full-card__info-text_size-l">Creation date: {{ .Card.CreationDate }}</div>
+                    <div class="full-card__info-text full-card__info-text_size-l">First album: {{ .Card.FirstAlbum }}</div>
                     {{ range .Card.Members }}
                         <div class="full-card__info-text">{{.}}</div>
                     {{ end }}
@@ -23,17 +29,19 @@
             </div>
             <div class="full-card__ld">
                 {{ range $location, $dates := .LocationDates }}
-                    <div class="record-ld__info record-ld__info_size-l">{{ $location }}</div>
-                    {{ range $dates}}
+                    <div class="record-ld__info record-ld__info_size-l">
+                        {{ $location }}
+                    </div>
+                    {{ range $dates }}
                         <div class="record-ld__info">{{ . }}</div>
                     {{ end }}
                 {{ end }}
             </div>
             <div class="full-card__map" id="map"></div>
-            <script
+            {{/* <script
                 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&v=weekly"
                 defer
-            ></script>
+            ></script> */}}
         </div>
     </div>
 </body>

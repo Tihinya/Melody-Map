@@ -12,9 +12,8 @@ func main() {
 
 	r.NewRoute("GET", "/", controllers.MainPage)
 	r.NewRoute("GET", `/full/(?P<id>\d+)`, controllers.FullInfo)
-	// r.NewRoute("GET", `/filter`, controllers.Filter)
-	// r.NewRoute("GET", `/search`, controllers.Search)
-	r.NewRoute("GET", "/dateslocations/", controllers.DatesLocations) // API endpoint for fetching google maps data
+	r.NewRoute("GET", `/dateslocations/(?P<id>\d+)`, controllers.DatesLocations) // API endpoint for fetching google maps data
+	r.NewRoute("GET", `.*`, controllers.NotFound)
 
 	http.HandleFunc("/", r.Serve)
 

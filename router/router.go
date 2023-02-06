@@ -36,6 +36,7 @@ func (router *Router) Serve(w http.ResponseWriter, r *http.Request) {
 				w.WriteHeader(http.StatusMethodNotAllowed)
 				return
 			}
+
 			matchMap := make(map[string]string)
 			groupName := v.regex.SubexpNames()
 
