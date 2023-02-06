@@ -44,6 +44,11 @@ func FullInfo(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	if md.Card.Id == 0 {
+		NotFound(w, r)
+		return
+	}
+
 	for _, dl := range db.DB.GetRelations() {
 		if dl.Id == id {
 			for k, v := range dl.DatesLocations {
