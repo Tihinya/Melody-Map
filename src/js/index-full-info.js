@@ -5,6 +5,10 @@ let data
 
 export async function getParams(id) {
   const data = await getData(id)
+  if (!data) {
+    return
+  }
+
   data.zoom = 1
 
   for (let v of data) {
@@ -20,7 +24,7 @@ export async function getParams(id) {
 
 async function getData(id) {
   const response = await fetch("/dateslocations/" + id)
-  const json = await response.json()
+  const json = await response.json().catch(console.log)
   return json
 }
 

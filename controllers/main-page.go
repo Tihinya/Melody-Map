@@ -100,21 +100,19 @@ func MainPage(w http.ResponseWriter, r *http.Request) {
 			(artist.CreationDate < filter.CreationDateStart || artist.CreationDate > filter.CreationDateEnd) {
 			continue
 		}
-
 		if (filter.AlbumDateStart != 0 || filter.AlbumDateEnd != 0) &&
 			(year < filter.AlbumDateStart || year > filter.AlbumDateEnd) {
 			continue
 		}
-
 		if len(filter.Members) > 0 && !contains(filter.Members, len(artist.Members)) {
 			continue
 		}
-
 		if filter.Location != "" && !contains(locations[i].Location, filter.Location) {
 			continue
 		}
-
-		isArtist(artist, search, locations[i].Location)
+		if !isArtist(artist, search, locations[i].Location) {
+			continue
+		}
 
 		card := Card{
 			Id:           artist.Id,

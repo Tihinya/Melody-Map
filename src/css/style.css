@@ -8,7 +8,7 @@
 body {
     background: var(--mainColor);
 
-    /* font-family: Arial, Helvetica, sans-serif; */
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .header {
@@ -47,25 +47,35 @@ body {
 
 .main-container {
     box-sizing: border-box;
+    position: relative;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 44px;
-    position: relative;
     padding: 40px 120px;
+    /* min-height: 320px; */
+
     background: var(--mainColor);
 
     z-index: 2;
 }
 
-.main-Rick {
-    padding: 40px 400px;
-    z-index: 2;
+.info-error {
+    width: 100%;
+
+    padding: 20px 0;
+
+    font-size: 40px;
+    text-align: center;
 }
 
 .card {
     box-sizing: border-box;
     width: 100%;
     cursor: pointer;
+}
+
+.card-rick {
+    width: 50%;
 }
 
 .card__header {
@@ -75,10 +85,10 @@ body {
     width: 100%;
     height: 48px;
     padding: 10px;
-    font-size: 24px;
+    font-size: 28px;
     color: #fff;
     background: #350505;
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-family: 'Rozha One', serif;
 }
 
 .card__main {
@@ -90,8 +100,7 @@ body {
 }
 
 .card__main-rick {
-    width: 100%;
-    height: 500px;
+    height: 800px;
     display: flex;
 }
 
@@ -122,6 +131,9 @@ body {
     flex-direction: column;
     /* justify-content: center; */
     align-items: center;
+
+    font-family: 'Rozha One', serif;
+    
     background: #515151;
 }
 
@@ -132,7 +144,6 @@ body {
 
     font-size: 20px;
     color: #fff;
-    font-family: 'Rozha One', serif;
 }
 
 .group__body {
@@ -149,8 +160,6 @@ body {
     padding: 4px 12px;
     font-size: 16px;
     color: var(--mainColor);
-    font-family: 'Rozha One', serif;
-
 }
 
 .fi-container {
@@ -178,9 +187,9 @@ body {
     height: 72px;
     padding: 10px 0;
 
-    font-size: 40px;
+    font-size: 44px;
 
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-family: 'Rozha One', serif;
 
     color: #D9D9D9;
 
@@ -205,16 +214,16 @@ body {
 .full-card__info-text {
     text-align: center;
 
-    font-family: 'Rozha One', serif;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 
     padding: 8px 12px;
-
+    
     font-size: 20px;
 }
 
 .full-card__info-text_size-l {
     font-size: 26px;
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-family: 'Rozha One', serif;
 }
 
 .full-card__info-text:hover:not(.full-card__info-text_size-l) {
@@ -300,6 +309,7 @@ body {
 
     color: white;
     background-color: rgb(37, 37, 37);
+    overflow: hidden;
 
     transition: max-height 500ms ease-in-out;
 }
@@ -396,10 +406,18 @@ body {
     height: 18px;
 }
 
-a:link { text-decoration: none; }
+a:link {
+    text-decoration: none;
+}
 
-a:visited { text-decoration: none; }
+a:visited {
+    text-decoration: none;
+}
 
-a:hover { text-decoration: none; }
+a:hover {
+    text-decoration: none;
+}
 
-a:active { text-decoration: none; }
+a:active {
+    text-decoration: none;
+}

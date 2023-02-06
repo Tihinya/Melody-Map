@@ -16,7 +16,7 @@
 <body>
     <div class="header">
     <a href="/" class="header__logo">GT52</a>
-        <form class="search-box" action="/search" method="GET">
+        <form class="search-box" action="/" method="GET">
             <input list="search-input" class="input" placeholder="Search..." name="search-input">
             <datalist id="search-input">
                 {{ range .GroupNames }}
@@ -90,6 +90,9 @@
         </div>
     </form>
     </div>
+    {{ if not .Cards }}
+        <div class="info-error"> No results </div>
+    {{ end}}
     <div class="main-container">
         {{ range .Cards }}
         {{ template "card" . }}

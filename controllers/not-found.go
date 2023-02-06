@@ -6,7 +6,7 @@ import (
 )
 
 func NotFound(w http.ResponseWriter, r *http.Request) {
-	t, err := template.ParseFiles("src/html/404/index.html")
+	t, err := template.ParseFiles("src/html/not-found/index.html")
 
 	if err != nil {
 		http.Error(w, "Something went wrong. We are working on that", http.StatusInternalServerError)
