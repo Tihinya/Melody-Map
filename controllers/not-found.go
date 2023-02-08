@@ -7,6 +7,7 @@ import (
 
 func NotFound(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("src/html/not-found/index.html")
+	w.WriteHeader(http.StatusNotFound)
 
 	if err != nil {
 		http.Error(w, "Something went wrong. We are working on that", http.StatusInternalServerError)
